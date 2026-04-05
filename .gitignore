@@ -1,10 +1,40 @@
-# ignore bin and build dirs
+# Build output
 **/bin/
 **/build/
-**/target
+**/target/
 
-# ignore .project since everyone's different!
+# Maven Wrapper (keep .mvn/wrapper/maven-wrapper.properties, ignore binary)
+.mvn/wrapper/maven-wrapper.jar
+
+# IDE files - Eclipse
 **/.project
+**/.classpath
+**/.settings/
+**/.metadata/
+**/.factorypath
 
-# ignore temp files
+# IDE files - IntelliJ IDEA
+**/.idea/
+**/*.iml
+**/*.iws
+**/*.ipr
+
+# IDE files - VS Code
+**/.vscode/
+
+# IDE files - NetBeans
+**/nbproject/
+**/nb-configuration.xml
+
+# OS files
+.DS_Store
+Thumbs.db
+*.swp
 *~
+
+# Logs
+*.log
+
+# Temporary files
+*.tmp
+*.bak
