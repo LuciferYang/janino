@@ -9,6 +9,9 @@ import java.util.concurrent.TimeUnit;
 /**
  * Benchmarks for script compilation and execution.
  *
+ * <p>Separates compile-only and execute-only measurements to avoid mixing
+ * compilation overhead with runtime execution cost.</p>
+ *
  * <p>Run with: {@code java -jar target/benchmarks.jar ScriptCompileBenchmark}</p>
  */
 @BenchmarkMode(Mode.Throughput)
@@ -19,6 +22,22 @@ import java.util.concurrent.TimeUnit;
 @Fork(2)
 public class ScriptCompileBenchmark {
 
+    private ScriptEvaluator preCompiledSE;
+
+    @Setup(Level.Trial)
+    public void setUp() throws Exception {
+        preCompiledSE = new ScriptEvaluator();
+        preCompiledSE.setReturnType(int.class);
+        preCompiledSE.cook(
+            "int sum = 0;\n"
+            + "for (int i = 0; i < 100; i++) {\n"
+            + "    sum += i;\n"
+            + "}\n"
+            + "return sum;\n"
+        );
+    }
+
+    /** Measures compilation time for a trivial one-line script. */
     @Benchmark
     public IScriptEvaluator compileSimpleScript() throws Exception {
         ScriptEvaluator se = new ScriptEvaluator();
@@ -26,6 +45,7 @@ public class ScriptCompileBenchmark {
         return se;
     }
 
+    /** Measures compilation time for a script containing a loop. */
     @Benchmark
     public IScriptEvaluator compileLoopScript() throws Exception {
         ScriptEvaluator se = new ScriptEvaluator();
@@ -40,17 +60,9 @@ public class ScriptCompileBenchmark {
         return se;
     }
 
+    /** Measures pure execution time of a pre-compiled loop script (no compilation overhead). */
     @Benchmark
-    public Object executeLoopScript() throws Exception {
-        ScriptEvaluator se = new ScriptEvaluator();
-        se.setReturnType(int.class);
-        se.cook(
-            "int sum = 0;\n"
-            + "for (int i = 0; i < 100; i++) {\n"
-            + "    sum += i;\n"
-            + "}\n"
-            + "return sum;\n"
-        );
-        return se.evaluate(null);
+    public Object executePreCompiled() throws Exception {
+        return preCompiledSE.evaluate(null);
     }
 }

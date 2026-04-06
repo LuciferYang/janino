@@ -1,0 +1,64 @@
+name: Benchmarks
+
+on:
+  push:
+    branches: [ master ]
+  # Allow manual trigger for ad-hoc benchmark runs
+  workflow_dispatch:
+
+# Need write access to gh-pages branch for storing benchmark results
+permissions:
+  contents: write
+  deployments: write
+
+jobs:
+  benchmark:
+    name: JMH Benchmarks
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up JDK 17
+        uses: actions/setup-java@v4
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+          cache: 'maven'
+
+      - name: Build benchmark JAR
+        working-directory: janino-parent
+        run: ./mvnw -B -Pbenchmarks clean package -pl ../janino-benchmarks -am -DskipTests
+
+      - name: Run JMH benchmarks
+        working-directory: janino-benchmarks
+        run: >
+          java -jar target/benchmarks.jar
+          -f 2 -wi 3 -i 5
+          -rf json -rff ../jmh-result.json
+
+      - name: Upload JMH result JSON
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: jmh-result
+          path: jmh-result.json
+          retention-days: 90
+
+      - name: Store benchmark result
+        uses: benchmark-action/github-action-benchmark@v1
+        with:
+          tool: 'jmh'
+          output-file-path: jmh-result.json
+          # GitHub Pages branch and directory
+          gh-pages-branch: gh-pages
+          benchmark-data-dir-path: dev/bench
+          # Automatically push results to gh-pages
+          auto-push: true
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          # Alert if benchmark regresses by more than 150%
+          alert-threshold: '150%'
+          comment-on-alert: true
+          fail-on-alert: false
+          # Keep chart manageable
+          max-items-in-chart: 50

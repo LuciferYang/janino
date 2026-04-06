@@ -9,6 +9,9 @@ import java.util.concurrent.TimeUnit;
 /**
  * Benchmarks for expression compilation and evaluation.
  *
+ * <p>Separates compile-only and evaluate-only measurements to avoid mixing
+ * compilation overhead with runtime evaluation cost.</p>
+ *
  * <p>Run with: {@code java -jar target/benchmarks.jar ExpressionCompileBenchmark}</p>
  */
 @BenchmarkMode(Mode.Throughput)
@@ -19,6 +22,17 @@ import java.util.concurrent.TimeUnit;
 @Fork(2)
 public class ExpressionCompileBenchmark {
 
+    private ExpressionEvaluator preCompiledEE;
+
+    @Setup(Level.Trial)
+    public void setUp() throws Exception {
+        preCompiledEE = new ExpressionEvaluator();
+        preCompiledEE.setParameters(new String[] { "a", "b" }, new Class[] { int.class, int.class });
+        preCompiledEE.setExpressionType(int.class);
+        preCompiledEE.cook("a + b * 2");
+    }
+
+    /** Measures compilation time for a simple arithmetic expression. */
     @Benchmark
     public IExpressionEvaluator compileSimpleArithmetic() throws Exception {
         ExpressionEvaluator ee = new ExpressionEvaluator();
@@ -26,6 +40,7 @@ public class ExpressionCompileBenchmark {
         return ee;
     }
 
+    /** Measures compilation time for an expression with typed parameters and Math calls. */
     @Benchmark
     public IExpressionEvaluator compileComplexExpression() throws Exception {
         ExpressionEvaluator ee = new ExpressionEvaluator();
@@ -35,12 +50,24 @@ public class ExpressionCompileBenchmark {
         return ee;
     }
 
+    /** Measures pure evaluation time of a pre-compiled expression (no compilation overhead). */
     @Benchmark
-    public Object evaluateSimple() throws Exception {
+    public Object evaluatePreCompiled() throws Exception {
+        return preCompiledEE.evaluate(new Object[] { 3, 7 });
+    }
+
+    /**
+     * Measures the {@code createFastEvaluator} API which generates a direct interface implementation,
+     * bypassing reflection for evaluation. This benchmarks the fast-path compilation cost.
+     */
+    @Benchmark
+    public Object createFastEvaluator() throws Exception {
         ExpressionEvaluator ee = new ExpressionEvaluator();
-        ee.setParameters(new String[] { "a", "b" }, new Class[] { int.class, int.class });
-        ee.setExpressionType(int.class);
-        ee.cook("a + b * 2");
-        return ee.evaluate(new Object[] { 3, 7 });
+        return ee.createFastEvaluator("a + b * 2", IntBinaryOp.class, "a", "b");
+    }
+
+    /** Functional interface for fast expression evaluation benchmark. */
+    public interface IntBinaryOp {
+        int evaluate(int a, int b);
     }
 }
