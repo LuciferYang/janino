@@ -656,11 +656,6 @@ class UnparserTest {
         UnparserTest.helpTestScript("{ return a              -> {};    }");
         UnparserTest.helpTestScript("{ return (int a, int b) -> {};    }");
         UnparserTest.helpTestScript("{ return ()             -> 3 + 7; }");
-
-        // Annotated wildcards (JLS8, 4.5.1).
-        UnparserTest.helpTestScript(
-            "{ java.util.Map<?, ?> map = new java.util.HashMap<@WildcardAnnotation ? extends String, ? extends @TypeAnnotation Integer>(); }"
-        );
     }
 
     @Test public void

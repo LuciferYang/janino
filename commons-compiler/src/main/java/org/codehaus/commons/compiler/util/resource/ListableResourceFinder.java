@@ -43,7 +43,7 @@ class ListableResourceFinder extends ResourceFinder {
      *   or directory tree (<var>recurse</var>{@code =true}). Example:
      * </p>
      * <pre>
-     *   resourceFinder.list("dir/", true) =&gt;
+     *   resourceFinder.list("dir/", true) =>
      *     dir/
      *     dir/afile
      *     dir/bfile
@@ -56,7 +56,7 @@ class ListableResourceFinder extends ResourceFinder {
      *   Otherwise, you will get a strange subset of a directory listing, resp. directory tree, as follows:
      * </p>
      * <pre>
-     *   resourceFinder.list("dir/a", true) =&gt;
+     *   resourceFinder.list("dir/a", true) =>
      *     dir/afile
      *     dir/adir/
      *     dir/adir/file
