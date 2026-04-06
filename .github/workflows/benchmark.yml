@@ -34,7 +34,7 @@ jobs:
         working-directory: janino-benchmarks
         run: >
           java -jar target/benchmarks.jar
-          -f 2 -wi 3 -i 5
+          -f 2 -wi 10 -i 20
           -rf json -rff ../jmh-result.json
 
       - name: Upload JMH result JSON
