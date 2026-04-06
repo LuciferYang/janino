@@ -29,8 +29,8 @@ import java.math.BigInteger;
 
 import org.codehaus.commons.compiler.util.Numbers;
 import org.codehaus.commons.nullanalysis.Nullable;
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 // SUPPRESS CHECKSTYLE Javadoc:9999
 
@@ -97,7 +97,7 @@ class NumbersTest {
         NumbersTest.assertCompletesNormally(message, new Runnable() {
             @Override public void run() { result[0] = Numbers.parseUnsignedInt(s, radix) & 0xffffffffL; }
         });
-        Assert.assertEquals(n, result[0]);
+        Assertions.assertEquals(n, result[0]);
     }
 
     /**
@@ -122,10 +122,10 @@ class NumbersTest {
         NumbersTest.assertCompletesNormally(message, new Runnable() {
             @Override public void run() { result[0] = Numbers.parseUnsignedLong(s, radix); }
         });
-        Assert.assertEquals(
-            message,
+        Assertions.assertEquals(
             n,
-            BigInteger.valueOf(result[0]).and(BigInteger.valueOf(2).pow(64).subtract(BigInteger.ONE))
+            BigInteger.valueOf(result[0]).and(BigInteger.valueOf(2).pow(64).subtract(BigInteger.ONE)),
+            message
         );
     }
 
@@ -153,7 +153,7 @@ class NumbersTest {
         try {
             runnable.run();
         } catch (Throwable t) { // SUPPRESS CHECKSTYLE IllegalCatch
-            Assert.fail((message == null ? "" : message + ": ") + "Throws \"" + t + "\"");
+            Assertions.fail((message == null ? "" : message + ": ") + "Throws \"" + t + "\"");
         }
     }
 
@@ -167,7 +167,7 @@ class NumbersTest {
             runnable.run();
         } catch (Throwable t) { // SUPPRESS CHECKSTYLE IllegalCatch
             if (t.getClass() != expected) {
-                Assert.fail((
+                Assertions.fail((
                     (message == null ? "" : message + ": ")
                     + expected.getName()
                     + " expected instead of \""
@@ -177,6 +177,6 @@ class NumbersTest {
             }
             return;
         }
-        Assert.fail((message == null ? "" : message + ": ") + expected.getName() + " expected");
+        Assertions.fail((message == null ? "" : message + ": ") + expected.getName() + " expected");
     }
 }

@@ -36,8 +36,8 @@ import org.codehaus.commons.compiler.util.resource.LocatableResource;
 import org.codehaus.commons.compiler.util.resource.Resource;
 import org.codehaus.commons.compiler.util.resource.ResourceFinders;
 import org.codehaus.commons.compiler.util.resource.ZipFileResourceFinder;
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 // SUPPRESS CHECKSTYLE Javadoc:9999
 
@@ -51,14 +51,14 @@ class ResourceFinderTest {
         ResourceFinderTest.assertMatches("file:.*/target/test-classes/foobar\\.zip", zipFileUrl.toString());
 
         URLClassLoader cl = new URLClassLoader(new URL[] { zipFileUrl });
-        Assert.assertNotNull(cl.getResource("foo.txt"));
+        Assertions.assertNotNull(cl.getResource("foo.txt"));
 
         Resource r = ResourceFinders.fromClassLoader(cl).findResource("foo.txt");
-        Assert.assertNotNull(r);
+        Assertions.assertNotNull(r);
 
-        Assert.assertTrue(r instanceof LocatableResource);
+        Assertions.assertTrue(r instanceof LocatableResource);
         URL url = ((LocatableResource) r).getLocation();
-        Assert.assertEquals("jar:" + zipFileUrl + "!/foo.txt", url.toString());
+        Assertions.assertEquals("jar:" + zipFileUrl + "!/foo.txt", url.toString());
     }
 
     @SuppressWarnings("static-method") @Test public void
@@ -68,12 +68,12 @@ class ResourceFinderTest {
             null // parent
         );
 
-        Assert.assertNotNull(cl.getResourceAsStream("foo.txt"));
+        Assertions.assertNotNull(cl.getResourceAsStream("foo.txt"));
 
         URL r = cl.getResource("foo.txt");
-        Assert.assertNotNull(r);
+        Assertions.assertNotNull(r);
 
-        Assert.assertEquals(
+        Assertions.assertEquals(
             "jar:file:target" + File.separator + "test-classes" + File.separator + "foobar.zip!foo.txt",
             r.toString()
         );
@@ -82,6 +82,6 @@ class ResourceFinderTest {
 
     private static void
     assertMatches(String regex, String actual) {
-        Assert.assertTrue("\"" + actual + "\" does not match regex \"" + regex + "\"", Pattern.matches(regex, actual));
+        Assertions.assertTrue(Pattern.matches(regex, actual), "\"" + actual + "\" does not match regex \"" + regex + "\"");
     }
 }

@@ -25,34 +25,26 @@
 
 package org.codehaus.commons.compiler.tests;
 
-import java.util.Collection;
-
 import org.codehaus.commons.compiler.ICompilerFactory;
 import org.codehaus.commons.compiler.IExpressionEvaluator;
-import org.junit.Assert;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.junit.runners.Parameterized;
-import org.junit.runners.Parameterized.Parameters;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.TestTemplate;
 
 import util.CommonsCompilerTestSuite;
-import util.TestUtil;
+import util.CompilerFactoryParameterized;
 
-@RunWith(Parameterized.class) public
+@CompilerFactoryParameterized public
 class BaseClassTest extends CommonsCompilerTestSuite {
 
     public
     BaseClassTest(ICompilerFactory compilerFactory) { super(compilerFactory); }
-
-    @Parameters(name = "CompilerFactory={0}") public static Collection<Object[]>
-    compilerFactories() throws Exception { return TestUtil.getCompilerFactoriesForParameters(); }
 
     public static
     class BaseClass {
         public int a, b;
     }
 
-    @Test public void
+    @TestTemplate public void
     testNewInstance() throws Exception {
 
         IExpressionEvaluator ee = this.compilerFactory.newExpressionEvaluator();
@@ -68,6 +60,6 @@ class BaseClassTest extends CommonsCompilerTestSuite {
 
         Object result = ee.getMethod().invoke(instance);
 
-        Assert.assertEquals(15, result);
+        Assertions.assertEquals(15, result);
     }
 }

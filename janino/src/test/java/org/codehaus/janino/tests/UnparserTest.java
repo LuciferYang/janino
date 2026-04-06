@@ -93,8 +93,8 @@ import org.codehaus.janino.Unparser;
 import org.codehaus.janino.Visitor.LvalueVisitor;
 import org.codehaus.janino.Visitor.RvalueVisitor;
 import org.codehaus.janino.util.AbstractTraverser;
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 // SUPPRESS CHECKSTYLE JavadocMethod:9999
 
@@ -119,7 +119,7 @@ class UnparserTest {
         String s = sw.toString();
         s = UnparserTest.replace(s, "((( ", "(");
         s = UnparserTest.replace(s, " )))", ")");
-        Assert.assertEquals(input, expected, s);
+        Assertions.assertEquals(expected, s, input);
     }
 
     private static void
@@ -144,7 +144,7 @@ class UnparserTest {
             s = sw.toString();
         }
 
-        Assert.assertEquals(input, UnparserTest.normalizeWhitespace(expected), UnparserTest.normalizeWhitespace(s));
+        Assertions.assertEquals(UnparserTest.normalizeWhitespace(expected), UnparserTest.normalizeWhitespace(s), input);
     }
 
     private static void
@@ -177,7 +177,7 @@ class UnparserTest {
             s = sw.toString();
         }
 
-        Assert.assertEquals(input, UnparserTest.normalizeWhitespace(expected), UnparserTest.normalizeWhitespace(s));
+        Assertions.assertEquals(UnparserTest.normalizeWhitespace(expected), UnparserTest.normalizeWhitespace(s), input);
     }
 
     private static void
@@ -195,7 +195,7 @@ class UnparserTest {
         u.close();
 
         String actual = UnparserTest.normalizeWhitespace(sw.toString());
-        Assert.assertEquals(expected, actual);
+        Assertions.assertEquals(expected, actual);
     }
 
     public static String
@@ -491,7 +491,7 @@ class UnparserTest {
         u.close();
         String s             = sw.toString();
         String correctString = "/**foo */ public interface Foo { }";
-        Assert.assertEquals(correctString, UnparserTest.normalizeWhitespace(s));
+        Assertions.assertEquals(correctString, UnparserTest.normalizeWhitespace(s));
     }
 
     @Test public void
@@ -510,7 +510,7 @@ class UnparserTest {
             Unparser     u  = new Unparser(sw);
             u.unparseAtom(expr);
             u.close();
-            Assert.assertEquals(expected, sw.toString());
+            Assertions.assertEquals(expected, sw.toString());
         }
     }
 
@@ -754,19 +754,19 @@ class UnparserTest {
                 for (int i = 0;; ++i) {
                     if (i == elements1.length) {
                         if (i == elements2.length) break;
-                        Assert.fail("Extra element " + elements2[i]);
+                        Assertions.fail("Extra element " + elements2[i]);
                     }
                     Locatable locatable1 = elements1[i];
 
                     if (i == elements2.length) {
-                        Assert.fail("Element missing: " + locatable1);
+                        Assertions.fail("Element missing: " + locatable1);
                     }
                     Locatable locatable2 = elements2[i];
 
                     String s1 = locatable1.toString();
                     String s2 = locatable2.toString();
                     if (!s1.equals(s2)) {
-                        Assert.fail(
+                        Assertions.fail(
                             locatable1.getLocation().toString()
                             + ": Expected \""
                             + s1

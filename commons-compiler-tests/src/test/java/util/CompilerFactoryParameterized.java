@@ -2,7 +2,7 @@
 /*
  * Janino - An embedded Java[TM] compiler
  *
- * Copyright (c) 2016 Arno Unkrig. All rights reserved.
+ * Copyright (c) 2001-2010 Arno Unkrig. All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  * following conditions are met:
@@ -23,54 +23,24 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package org.codehaus.janino.tests;
+package util;
 
-import java.util.EnumSet;
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
 
-import org.codehaus.commons.compiler.CompileException;
-import org.codehaus.janino.JaninoOption;
-import org.codehaus.janino.ScriptEvaluator;
-import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.Test;
-
-// SUPPRESS CHECKSTYLE JavadocMethod:9999
+import org.junit.jupiter.api.extension.ExtendWith;
 
 /**
- * Unit tests for the {@link ScriptEvaluator}.
+ * Annotation that replaces JUnit 4's {@code @RunWith(Parameterized.class)} for compiler factory parameterized tests.
+ * <p>
+ * Each test method annotated with {@code @TestTemplate} will be invoked once per available {@code ICompilerFactory}.
+ * The factory is injected via the test class constructor.
+ * </p>
  */
-public
-class ScriptEvaluatorTest {
-
-    @Test public void
-    testAccessibilityOfClassMembers1() throws Exception {
-
-        // Without
-        new ScriptEvaluator().cook(
-            ""
-            + "class MyClass {\n"
-            + "    private int pri;\n"
-            + "}\n"
-            + "\n"
-            + "new MyClass().pri = 7;\n"
-        );
-    }
-
-    @Test public void
-    testAccessibilityOfClassMembers2() throws Exception {
-        try {
-            new ScriptEvaluator().options(
-                EnumSet.of(JaninoOption.PRIVATE_MEMBERS_OF_ENCLOSING_AND_ENCLOSED_TYPES_INACCESSIBLE)
-            ).cook(
-                ""
-                + "class MyClass {\n"
-                + "    private int pri;\n"
-                + "}\n"
-                + "\n"
-                + "new MyClass().pri = 7;\n"
-            );
-            Assertions.fail("CompileException expected");
-        } catch (CompileException ce) {
-            Assertions.assertTrue(ce.getMessage().contains("Private member cannot be accessed"));
-        }
-    }
+@Target(ElementType.TYPE)
+@Retention(RetentionPolicy.RUNTIME)
+@ExtendWith(CompilerFactoryParameterizedExtension.class)
+public @interface CompilerFactoryParameterized {
 }

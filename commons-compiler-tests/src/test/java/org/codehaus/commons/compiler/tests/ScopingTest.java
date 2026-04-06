@@ -28,33 +28,26 @@
 package org.codehaus.commons.compiler.tests;
 
 import java.lang.reflect.Method;
-import java.util.Collection;
 
 import org.codehaus.commons.compiler.ICompilerFactory;
 import org.codehaus.commons.compiler.ISimpleCompiler;
-import org.junit.Assert;
-import org.junit.Ignore;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.junit.runners.Parameterized;
-import org.junit.runners.Parameterized.Parameters;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.TestTemplate;
 
-import util.TestUtil;
+import util.CompilerFactoryParameterized;
 
 /**
  * Tests for the handling of 'scopes' within JANINO.
  */
-@RunWith(Parameterized.class) public
+@CompilerFactoryParameterized public
 class ScopingTest {
     private final ICompilerFactory compilerFactory;
-
-    @Parameters(name = "CompilerFactory={0}") public static Collection<Object[]>
-    compilerFactories() throws Exception { return TestUtil.getCompilerFactoriesForParameters(); }
 
     public
     ScopingTest(ICompilerFactory compilerFactory) { this.compilerFactory = compilerFactory; }
 
-    @Test public void
+    @TestTemplate public void
     testProtectedAccessAcrossPackages() throws Exception {
         ISimpleCompiler sc = this.compilerFactory.newSimpleCompiler();
         sc.cook(
@@ -70,7 +63,7 @@ class ScopingTest {
         );
     }
 
-    @Test @Ignore("Known failure - JANINO-113") public void
+    @TestTemplate @Disabled("Known failure - JANINO-113") public void
     testProtectedAccessWithinPackage() throws Exception {
         ISimpleCompiler sc = this.compilerFactory.newSimpleCompiler();
         sc.cook(
@@ -111,21 +104,21 @@ class ScopingTest {
         Object res;
         {   // non-static
             res = get.invoke(i, new Object[0]);
-            Assert.assertEquals(1, res);
+            Assertions.assertEquals(1, res);
             set.invoke(i, new Object[0]);
             res = get.invoke(i, new Object[0]);
-            Assert.assertEquals(11, res);
+            Assertions.assertEquals(11, res);
         }
         {   //static
             res = getS.invoke(i, new Object[0]);
-            Assert.assertEquals(2, res);
+            Assertions.assertEquals(2, res);
             setS.invoke(i, new Object[0]);
             res = getS.invoke(i, new Object[0]);
-            Assert.assertEquals(12, res);
+            Assertions.assertEquals(12, res);
         }
     }
 
-    @Test @Ignore("Known failure - JANINO-113") public void
+    @TestTemplate @Disabled("Known failure - JANINO-113") public void
     testComplicatedSyntheticAccess() throws Exception {
         ISimpleCompiler sc = this.compilerFactory.newSimpleCompiler();
         sc.cook(
@@ -168,15 +161,15 @@ class ScopingTest {
         };
         for (int i = 0; i < 3; ++i) {
             Object g1 = gets[i].invoke(inner, new Object[0]);
-            Assert.assertEquals(1, g1);
+            Assertions.assertEquals(1, g1);
             Object s1 = sets[i].invoke(inner, new Object[0]);
-            Assert.assertEquals(i, s1);
+            Assertions.assertEquals(i, s1);
             Object g2 = gets[i].invoke(inner, new Object[0]);
-            Assert.assertEquals(i, g2);
+            Assertions.assertEquals(i, g2);
         }
     }
 
-    @Test @Ignore("Known failure - JANINO-113") public void
+    @TestTemplate @Disabled("Known failure - JANINO-113") public void
     testStaticInitAccessProtected() throws Exception {
         ISimpleCompiler sc = this.compilerFactory.newSimpleCompiler();
         sc.cook(
@@ -207,8 +200,8 @@ class ScopingTest {
         Class<?> topClass    = sc.getClassLoader().loadClass("test.Outer");
         Method   createInner = topClass.getDeclaredMethod("createInner", new Class[0]);
         Object   t           = topClass.newInstance();
-        Assert.assertNotNull(t);
+        Assertions.assertNotNull(t);
         Object inner = createInner.invoke(t, new Object[0]);
-        Assert.assertNotNull(inner);
+        Assertions.assertNotNull(inner);
     }
 }

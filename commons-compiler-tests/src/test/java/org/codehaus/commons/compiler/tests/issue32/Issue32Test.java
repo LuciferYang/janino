@@ -26,18 +26,14 @@
 package org.codehaus.commons.compiler.tests.issue32;
 
 import java.lang.reflect.Method;
-import java.util.Collection;
 
 import org.codehaus.commons.compiler.ICompilerFactory;
 import org.codehaus.commons.compiler.ISimpleCompiler;
 import org.codehaus.commons.nullanalysis.Nullable;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.junit.runners.Parameterized;
-import org.junit.runners.Parameterized.Parameters;
+import org.junit.jupiter.api.TestTemplate;
 
 import util.CommonsCompilerTestSuite;
-import util.TestUtil;
+import util.CompilerFactoryParameterized;
 
 // SUPPRESS CHECKSTYLE Javadoc:9999
 
@@ -45,11 +41,8 @@ import util.TestUtil;
  * Attempts to reproduce the problems described in <a href="https://github.com/janino-compiler/
  * janino/issues/32">Issue #32</a>.
  */
-@RunWith(Parameterized.class) public
+@CompilerFactoryParameterized public
 class Issue32Test extends CommonsCompilerTestSuite {
-
-    @Parameters(name = "CompilerFactory={0}") public static Collection<Object[]>
-    compilerFactories() throws Exception { return TestUtil.getCompilerFactoriesForParameters(); }
 
     public
     Issue32Test(ICompilerFactory compilerFactory) { super(compilerFactory); }
@@ -85,7 +78,7 @@ class Issue32Test extends CommonsCompilerTestSuite {
     public static
     class RowType { public static final int ROW_AGG = 3; }
 
-    @Test public void
+    @TestTemplate public void
     test() throws Exception {
 
         final String cu = (

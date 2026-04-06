@@ -37,9 +37,9 @@ import org.codehaus.janino.JaninoOption;
 import org.codehaus.janino.ScriptEvaluator;
 import org.codehaus.janino.SimpleCompiler;
 import org.codehaus.janino.UnitCompiler;
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 // SUPPRESS CHECKSTYLE JavadocMethod:9999
 
@@ -49,7 +49,7 @@ import org.junit.Test;
 public
 class OptionsTest {
 
-    @Before
+    @BeforeEach
     public void
     setUp() throws Exception {
 
@@ -72,19 +72,19 @@ class OptionsTest {
             ""
             + "import java.io.Closeable;\n"
             + "import java.io.IOException;\n"
-            + "import org.junit.Assert;\n"
+            + "import org.junit.jupiter.api.Assertions;\n"
             + "\n"
             + "final int[] x = new int[1];\n"
             + "\n"
             + "try (new Closeable() {\n"
             + "    public void close() {\n"
-            + "        Assert.assertEquals(2, ++x[0]);\n"
+            + "        Assertions.assertEquals(2, ++x[0]);\n"
             + "    }\n"
             + "}) {\n"
-            + "    Assert.assertEquals(1, ++x[0]);\n"
+            + "    Assertions.assertEquals(1, ++x[0]);\n"
             + "}\n"
             + "\n"
-            + "Assert.assertEquals(3, ++x[0]);\n"
+            + "Assertions.assertEquals(3, ++x[0]);\n"
         );
 
         OptionsTest.assertScriptCompilationError("NewAnonymousClassInstance rvalue not allowed as a resource", script);
@@ -108,11 +108,11 @@ class OptionsTest {
         if (options.length >= 1) se.options(EnumSet.copyOf(Arrays.asList(options)));
         try {
             se.cook(script);
-            Assert.fail("CompileException expected");
+            Assertions.fail("CompileException expected");
         } catch (CompileException ce) {
-            Assert.assertTrue(
-                "Compilation error message\"" + ce.getMessage() + "\" does not contain \"" + expectedInfix + "\"",
-                ce.getMessage().contains(expectedInfix)
+            Assertions.assertTrue(
+                ce.getMessage().contains(expectedInfix),
+                "Compilation error message\"" + ce.getMessage() + "\" does not contain \"" + expectedInfix + "\""
             );
         }
     }

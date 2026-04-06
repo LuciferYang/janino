@@ -35,7 +35,6 @@ import java.io.StringWriter;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.text.MessageFormat;
-import java.util.Collection;
 import java.util.Properties;
 import java.util.logging.Handler;
 import java.util.logging.Level;
@@ -51,31 +50,25 @@ import org.codehaus.commons.compiler.ISimpleCompiler;
 import org.codehaus.commons.compiler.Location;
 import org.codehaus.commons.compiler.util.resource.MapResourceFinder;
 import org.codehaus.commons.nullanalysis.Nullable;
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.junit.runners.Parameterized;
-import org.junit.runners.Parameterized.Parameters;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.TestTemplate;
 
 import util.CommonsCompilerTestSuite;
-import util.TestUtil;
+import util.CompilerFactoryParameterized;
 
 /**
  * Tests for JANINO's {@link ExpressionEvaluator}, {@link ScriptEvaluator}, {@link ClassBodyEvaluator} and {@link
  * SimpleCompiler}.
  */
-@RunWith(Parameterized.class) public
+@CompilerFactoryParameterized public
 class EvaluatorTest extends CommonsCompilerTestSuite {
-
-    @Parameters(name = "CompilerFactory={0}") public static Collection<Object[]>
-    compilerFactories() throws Exception { return TestUtil.getCompilerFactoriesForParameters(); }
 
     public
     EvaluatorTest(ICompilerFactory compilerFactory) { super(compilerFactory); }
 
     @SuppressWarnings({ "unused", "static-method" })
-    @Before
+    @BeforeEach
     public void
     setUp() throws Exception {
 
@@ -89,7 +82,7 @@ class EvaluatorTest extends CommonsCompilerTestSuite {
         }
     }
 
-    @Test public void
+    @TestTemplate public void
     testMultiScriptEvaluator() throws Exception {
         IScriptEvaluator se    = this.compilerFactory.newScriptEvaluator();
         se.setOverrideMethod(new boolean[] { false, false });
@@ -99,14 +92,14 @@ class EvaluatorTest extends CommonsCompilerTestSuite {
         se.setParameters(new String[][] { { "a", "b" }, {} }, new Class<?>[][] { { double.class, double.class }, {} });
         se.setStaticMethod(new boolean[] { true, true });
         se.cook(new String[] { "return a + b;", "return 0;" });
-        Assert.assertEquals(
+        Assertions.assertEquals(
             new Double(7.0),
             se.getMethod(0).invoke(null, new Object[] { new Double(3.0), new Double(4.0) })
         );
-        Assert.assertEquals(new Double(0.0), se.getMethod(1).invoke(null, new Object[0]));
+        Assertions.assertEquals(new Double(0.0), se.getMethod(1).invoke(null, new Object[0]));
     }
 
-    @Test public void
+    @TestTemplate public void
     testExpressionEvaluator() throws Exception {
         IExpressionEvaluator ee = this.compilerFactory.newExpressionEvaluator();
 
@@ -159,14 +152,14 @@ class EvaluatorTest extends CommonsCompilerTestSuite {
         {
             Method m        = ee.getMethod(0);
             Object instance = m.getDeclaringClass().newInstance();
-            Assert.assertEquals(5, m.invoke(instance, new Object[] { 2, 3 }));
+            Assertions.assertEquals(5, m.invoke(instance, new Object[] { 2, 3 }));
         }
 
         try {
             ee.evaluate(1, new Object[0]);
-            Assert.fail("Should have thrown an InvocationTargetException");
+            Assertions.fail("Should have thrown an InvocationTargetException");
         } catch (InvocationTargetException ex) {
-            Assert.assertTrue("FileNotFoundException", ex.getTargetException() instanceof FileNotFoundException);
+            Assertions.assertTrue(ex.getTargetException() instanceof FileNotFoundException, "FileNotFoundException");
         }
 
         try {
@@ -174,11 +167,11 @@ class EvaluatorTest extends CommonsCompilerTestSuite {
             Object instance = m.getDeclaringClass().newInstance();
             m.invoke(instance, new Object[0]);
         } catch (Exception e) {
-            Assert.fail(e.getMessage());
+            Assertions.fail(e.getMessage());
         }
     }
 
-    @Test public void
+    @TestTemplate public void
     testFastClassBodyEvaluator1() throws Exception {
         IClassBodyEvaluator cbe = this.compilerFactory.newClassBodyEvaluator();
         cbe.setImplementedInterfaces(new Class[] { Runnable.class });
@@ -193,7 +186,7 @@ class EvaluatorTest extends CommonsCompilerTestSuite {
         ((Runnable) cbe.getClazz().newInstance()).run();
     }
 
-    @Test public void
+    @TestTemplate public void
     testFastClassBodyEvaluator2() throws Exception {
         try {
             IClassBodyEvaluator cbe = this.compilerFactory.newClassBodyEvaluator();
@@ -204,13 +197,13 @@ class EvaluatorTest extends CommonsCompilerTestSuite {
                 + "    System.out.println(\"Got here\");\n"
                 + "}"
             );
-            Assert.fail("CompileException expected");
+            Assertions.fail("CompileException expected");
         } catch (CompileException ex) {
             ;
         }
     }
 
-    @Test @SuppressWarnings("unchecked") public void
+    @TestTemplate @SuppressWarnings("unchecked") public void
     testFastExpressionEvaluator() throws Exception {
         IExpressionEvaluator ee = this.compilerFactory.newExpressionEvaluator();
         ee.setImplementedInterfaces(new Class[] { Comparable.class });
@@ -224,7 +217,7 @@ class EvaluatorTest extends CommonsCompilerTestSuite {
 
     private static final int COUNT = 10000;
 
-    @Test public void
+    @TestTemplate public void
     testManyEEs() throws Exception {
         IExpressionEvaluator ee = this.compilerFactory.newExpressionEvaluator();
 
@@ -241,10 +234,10 @@ class EvaluatorTest extends CommonsCompilerTestSuite {
         ee.setParameters(parameterNames, parameterTypes);
 
         ee.cook(expressions);
-        Assert.assertEquals(165, ee.evaluate(3 * EvaluatorTest.COUNT / 4, new Object[] { 77, 88 }));
+        Assertions.assertEquals(165, ee.evaluate(3 * EvaluatorTest.COUNT / 4, new Object[] { 77, 88 }));
     }
 
-    @Test public void
+    @TestTemplate public void
     testErrorHandler() throws Exception {
         MapResourceFinder sourceFinder = new MapResourceFinder();
 
@@ -275,7 +268,7 @@ class EvaluatorTest extends CommonsCompilerTestSuite {
                 }
             });
             et.assertUncookable("\"a\" is not an rvalue|cannot find symbol.*a");
-            Assert.assertEquals(1, count[0]);
+            Assertions.assertEquals(1, count[0]);
         }
 
         // Error handler that does *not* throw a CompileException.
@@ -288,11 +281,11 @@ class EvaluatorTest extends CommonsCompilerTestSuite {
             });
 
             et.assertUncookable("failed with 1 errors|error.*while compiling|unknown reason");
-            Assert.assertTrue(count[0] > 0);
+            Assertions.assertTrue(count[0] > 0);
         }
     }
 
-    @Test public void
+    @TestTemplate public void
     testAccessingCompilingClass() throws Exception {
         ISimpleCompiler sc = this.compilerFactory.newSimpleCompiler();
         sc.cook(
@@ -341,17 +334,17 @@ class EvaluatorTest extends CommonsCompilerTestSuite {
             for (int j = 0; j < exp.length; ++j) {
                 if (method.getName().startsWith("getL" + j)) {
                     Class<?> res = (Class<?>) method.invoke(inst, new Object[0]);
-                    Assert.assertEquals(exp[j], res);
+                    Assertions.assertEquals(exp[j], res);
                     ++numTests;
                 }
             }
         }
         //we count tests just to make sure things didn't go horrifically wrong and
         //the above loops become empty
-        Assert.assertEquals(8, numTests);
+        Assertions.assertEquals(8, numTests);
     }
 
-    @Test public void
+    @TestTemplate public void
     testDivByZero() throws Exception {
         ISimpleCompiler sc = this.compilerFactory.newSimpleCompiler();
         sc.cook(
@@ -380,15 +373,15 @@ class EvaluatorTest extends CommonsCompilerTestSuite {
             if (method.getName().startsWith("run")) {
                 try {
                     Object res = method.invoke(o, new Object[0]);
-                    Assert.fail("Method " + method + " should have failed, but got " + res);
+                    Assertions.fail("Method " + method + " should have failed, but got " + res);
                 } catch (InvocationTargetException ae) {
-                    Assert.assertTrue(ae.getTargetException() instanceof ArithmeticException);
+                    Assertions.assertTrue(ae.getTargetException() instanceof ArithmeticException);
                 }
             }
         }
     }
 
-    @Test public void
+    @TestTemplate public void
     testTrinaryOptimize() throws Exception {
         ISimpleCompiler sc = this.compilerFactory.newSimpleCompiler();
         sc.cook(
@@ -409,8 +402,8 @@ class EvaluatorTest extends CommonsCompilerTestSuite {
         Method   falseMeth = c.getMethod("runFalse");
 
         Object   o = c.newInstance();
-        Assert.assertEquals(-1, trueMeth.invoke(o, new Object[0]));
-        Assert.assertEquals(1, falseMeth.invoke(o, new Object[0]));
+        Assertions.assertEquals(-1, trueMeth.invoke(o, new Object[0]));
+        Assertions.assertEquals(1, falseMeth.invoke(o, new Object[0]));
     }
 
     public static boolean
@@ -436,7 +429,7 @@ class EvaluatorTest extends CommonsCompilerTestSuite {
         throw new RuntimeException("Unsupported comparison");
     }
 
-    @Test public void
+    @TestTemplate public void
     testHandlingNaN() throws Exception {
         String prog1 = (
             ""
@@ -516,9 +509,8 @@ class EvaluatorTest extends CommonsCompilerTestSuite {
                         );
                         Object[] objs   = new Object[] { args[0], args[1], operator };
                         Object   actual = dm.invoke(null, objs);
-                        Assert.assertEquals(msg, exp, actual);
+                        Assertions.assertEquals(exp, actual, msg);
                     }
-
                     {
                         msg = "float: " + msg;
                         boolean exp = EvaluatorTest.compare(
@@ -532,14 +524,14 @@ class EvaluatorTest extends CommonsCompilerTestSuite {
                             operator
                         };
                         Object actual = fm.invoke(null, objs);
-                        Assert.assertEquals(msg, exp, actual);
+                        Assertions.assertEquals(exp, actual, msg);
                     }
                 }
             }
         }
     }
 
-    @Test public void
+    @TestTemplate public void
     test32kBranchLimit() throws Exception {
         String preamble = (
             ""
@@ -607,11 +599,11 @@ class EvaluatorTest extends CommonsCompilerTestSuite {
             } catch (Error e) {
                 throw new Error("repetitions=" + repetitions, e);
             }
-            Assert.assertEquals(2 * repetitions, res);
+            Assertions.assertEquals(2 * repetitions, res);
         }
 
     }
-    @Test public void
+    @TestTemplate public void
     test64kConstantPool() throws Exception {
 
         /* == expected contant pool ==
@@ -657,7 +649,7 @@ class EvaluatorTest extends CommonsCompilerTestSuite {
             ISimpleCompiler sc = this.compilerFactory.newSimpleCompiler();
             if (isCookable) {
                 sc.cook(cu);
-                Assert.assertNotNull(sc.getClassLoader().loadClass("test.Test").newInstance());
+                Assertions.assertNotNull(sc.getClassLoader().loadClass("test.Test").newInstance());
             } else {
                 this.assertCompilationUnitUncookable(
                     cu,
@@ -666,7 +658,7 @@ class EvaluatorTest extends CommonsCompilerTestSuite {
             }
         }
     }
-    @Test public void
+    @TestTemplate public void
     testManyArgumentsCall() throws Exception {
         final String preamble = (
             ""
@@ -714,10 +706,10 @@ class EvaluatorTest extends CommonsCompilerTestSuite {
             Method   m   = c.getDeclaredMethod("run", new Class[0]);
             Object   o   = c.newInstance();
             Object   res = m.invoke(o, new Object[0]);
-            Assert.assertEquals(1.2D, res);
+            Assertions.assertEquals(1.2D, res);
         }
     }
-    @Test public void
+    @TestTemplate public void
     test64kOperandStackHeight() throws Exception {
         String preamble = (
             ""
@@ -752,11 +744,11 @@ class EvaluatorTest extends CommonsCompilerTestSuite {
             Method   m   = c.getDeclaredMethod("run", new Class[0]);
             Object   o   = c.newInstance();
             Object   res = m.invoke(o);
-            Assert.assertEquals((double) repetitions, res);
+            Assertions.assertEquals((double) repetitions, res);
         }
     }
 
-    @Test public void
+    @TestTemplate public void
     testHugeIntArray() throws Exception {
         String preamble = (
             ""
@@ -790,11 +782,11 @@ class EvaluatorTest extends CommonsCompilerTestSuite {
 
             Class<?> c = sc.getClassLoader().loadClass("test.Test");
             Object   o = c.newInstance();
-            Assert.assertNotNull(o);
+            Assertions.assertNotNull(o);
         }
     }
 
-    @Test public void
+    @TestTemplate public void
     testStaticFieldAccess() throws Exception {
         this.assertCompilationUnitCookable((
             ""
@@ -810,7 +802,7 @@ class EvaluatorTest extends CommonsCompilerTestSuite {
         ));
     }
 
-    @Test public void
+    @TestTemplate public void
     testWideInstructions() throws Exception {
         String preamble = (
             ""
@@ -852,12 +844,12 @@ class EvaluatorTest extends CommonsCompilerTestSuite {
             Class<?> c = sc.getClassLoader().loadClass("test.Test");
             Method   m = c.getDeclaredMethod("run", new Class[0]);
             Object   o = m.invoke(null, new Object[0]);
-            Assert.assertEquals("hi 1 1.0 1.0 1 1 true try finally", o);
+            Assertions.assertEquals("hi 1 1.0 1.0 1 1 true try finally", o);
         }
 
     }
 
-    @Test public void
+    @TestTemplate public void
     testInstanceOf() throws Exception {
         String test = (
             ""
@@ -879,20 +871,20 @@ class EvaluatorTest extends CommonsCompilerTestSuite {
         sc.cook(test);
         Class<?> c  = sc.getClassLoader().loadClass("test.Test");
         Method   m0 = c.getDeclaredMethod("run", new Class[] {});
-        Assert.assertEquals(false, m0.invoke(null, new Object[0]));
+        Assertions.assertEquals(false, m0.invoke(null, new Object[0]));
 
         Method mStr = c.getDeclaredMethod("run", new Class[] { String.class });
         Method mObj = c.getDeclaredMethod("run", new Class[] { Object.class });
 
-        Assert.assertEquals(true,  mObj.invoke(null, new Object[] { "" }));
-        Assert.assertEquals(false, mObj.invoke(null, new Object[] { 1 }));
-        Assert.assertEquals(false, mObj.invoke(null, new Object[] { null }));
+        Assertions.assertEquals(true,  mObj.invoke(null, new Object[] { "" }));
+        Assertions.assertEquals(false, mObj.invoke(null, new Object[] { 1 }));
+        Assertions.assertEquals(false, mObj.invoke(null, new Object[] { null }));
 
-        Assert.assertEquals(true,  mStr.invoke(null, new Object[] { "" }));
-        Assert.assertEquals(false, mStr.invoke(null, new Object[] { null }));
+        Assertions.assertEquals(true,  mStr.invoke(null, new Object[] { "" }));
+        Assertions.assertEquals(false, mStr.invoke(null, new Object[] { null }));
     }
 
-    @Test public void
+    @TestTemplate public void
     testOverrideVisibility() throws Exception {
 
         // so should this
@@ -914,7 +906,7 @@ class EvaluatorTest extends CommonsCompilerTestSuite {
         ), "test.Test");
     }
 
-    @Test public void
+    @TestTemplate public void
     testCovariantReturns() throws Exception {
         this.assertCompilationUnitCookable(
             ""
@@ -940,7 +932,7 @@ class EvaluatorTest extends CommonsCompilerTestSuite {
         );
     }
 
-    @Test public void
+    @TestTemplate public void
     testNonExistentImport() throws Exception {
         this.assertCompilationUnitUncookable(
             "import does.not.Exist; public class Test { private final Exist e = null; }"
@@ -948,7 +940,7 @@ class EvaluatorTest extends CommonsCompilerTestSuite {
         this.assertCompilationUnitUncookable("import does.not.Exist; public class Test { }");
     }
 
-    @Test public void
+    @TestTemplate public void
     testAnonymousFieldInitializedByCapture() throws Exception {
         ISimpleCompiler sc = this.compilerFactory.newSimpleCompiler();
         sc.cook(
@@ -978,7 +970,7 @@ class EvaluatorTest extends CommonsCompilerTestSuite {
         ((Runnable) res).run();
     }
 
-    @Test public void
+    @TestTemplate public void
     testNamedFieldInitializedByCapture() throws Exception {
         ISimpleCompiler sc = this.compilerFactory.newSimpleCompiler();
         sc.cook(
@@ -1009,7 +1001,7 @@ class EvaluatorTest extends CommonsCompilerTestSuite {
         ((Runnable) res).run();
     }
 
-    @Test public void
+    @TestTemplate public void
     testAbstractGrandParentsWithCovariantReturns() throws Exception {
         this.assertCompilationUnitCookable(
             ""
@@ -1021,7 +1013,7 @@ class EvaluatorTest extends CommonsCompilerTestSuite {
         );
     }
 
-    @Test public void
+    @TestTemplate public void
     testStringBuilderLength() throws Exception {
         ISimpleCompiler sc = this.compilerFactory.newSimpleCompiler();
         sc.cook(
@@ -1036,14 +1028,14 @@ class EvaluatorTest extends CommonsCompilerTestSuite {
         Object   t        = topClass.newInstance();
 
         StringBuilder sb = new StringBuilder();
-        Assert.assertEquals(sb.length(), get.invoke(t, new Object[] { sb }));
+        Assertions.assertEquals(sb.length(), get.invoke(t, new Object[] { sb }));
         sb.append("asdf");
-        Assert.assertEquals(sb.length(), get.invoke(t, new Object[] { sb }));
+        Assertions.assertEquals(sb.length(), get.invoke(t, new Object[] { sb }));
         sb.append("qwer");
-        Assert.assertEquals(sb.length(), get.invoke(t, new Object[] { sb }));
+        Assertions.assertEquals(sb.length(), get.invoke(t, new Object[] { sb }));
     }
 
-    @Test public void
+    @TestTemplate public void
     testCovariantClone() throws Exception {
         ISimpleCompiler sc = this.compilerFactory.newSimpleCompiler();
         sc.cook(
@@ -1117,11 +1109,11 @@ class EvaluatorTest extends CommonsCompilerTestSuite {
         Method   bar      = topClass.getMethod("cloneWithOutArguments");
         Object   t        = topClass.newInstance();
 
-        Assert.assertNotNull(foo.invoke(t, new Object[0]));
-        Assert.assertNotNull(bar.invoke(t, new Object[0]));
+        Assertions.assertNotNull(foo.invoke(t, new Object[0]));
+        Assertions.assertNotNull(bar.invoke(t, new Object[0]));
     }
 
-    @Test public void
+    @TestTemplate public void
     testBaseClassAccess() throws Exception {
         this.assertCompilationUnitCookable(
             ""
@@ -1140,7 +1132,7 @@ class EvaluatorTest extends CommonsCompilerTestSuite {
         );
     }
 
-    @Test public void
+    @TestTemplate public void
     testNullComparator() throws Exception {
         this.assertCompilationUnitCookable(
             ""
@@ -1156,7 +1148,7 @@ class EvaluatorTest extends CommonsCompilerTestSuite {
         );
     }
 
-    @Test public void
+    @TestTemplate public void
     testDiagnosticLineNumbers() throws Exception {
         this.assertClassBodyUncookable((
             ""
@@ -1194,7 +1186,7 @@ class EvaluatorTest extends CommonsCompilerTestSuite {
         ), 3);
     }
 
-    @Test public void
+    @TestTemplate public void
     testAnyType1() throws Exception {
 
         @SuppressWarnings("deprecation") Class<?> anyType = IExpressionEvaluator.ANY_TYPE;
@@ -1203,10 +1195,10 @@ class EvaluatorTest extends CommonsCompilerTestSuite {
         ee.setExpressionType(anyType);
 
         ee.cook("3");
-        Assert.assertEquals(3, ee.evaluate());
+        Assertions.assertEquals(3, ee.evaluate());
     }
 
-    @Test public void
+    @TestTemplate public void
     testAnyType2() throws Exception {
 
         @SuppressWarnings("deprecation") Class<?> anyType = IExpressionEvaluator.ANY_TYPE;
@@ -1214,30 +1206,30 @@ class EvaluatorTest extends CommonsCompilerTestSuite {
         IExpressionEvaluator ee = this.compilerFactory.newExpressionEvaluator();
         ee.setExpressionType(anyType);
         ee.cook("\"HELLO\"");
-        Assert.assertEquals("HELLO", ee.evaluate());
+        Assertions.assertEquals("HELLO", ee.evaluate());
     }
 
-    @Test public void
+    @TestTemplate public void
     testAnyType3() throws Exception {
 
         IExpressionEvaluator ee = this.compilerFactory.newExpressionEvaluator();
         ee.setExpressionType(Object.class);
 
         ee.cook("3");
-        Assert.assertEquals(3, ee.evaluate());
+        Assertions.assertEquals(3, ee.evaluate());
     }
 
-    @Test public void
+    @TestTemplate public void
     testAnyType4() throws Exception {
 
         IExpressionEvaluator ee = this.compilerFactory.newExpressionEvaluator();
         ee.setExpressionType(Object.class);
 
         ee.cook("\"HELLO\"");
-        Assert.assertEquals("HELLO", ee.evaluate());
+        Assertions.assertEquals("HELLO", ee.evaluate());
     }
 
-    @Test public void
+    @TestTemplate public void
     testMultipleExpressions() throws Exception {
         IExpressionEvaluator ee = this.compilerFactory.newExpressionEvaluator();
     //        ee.setStaticMethod(false);
@@ -1245,7 +1237,7 @@ class EvaluatorTest extends CommonsCompilerTestSuite {
             ee.cook("9*3;7+1".split(";"));
         }
 
-    @Test public void
+    @TestTemplate public void
     testSimpleLocalMethod() throws Exception {
 
         // The JDK implementation does not support "local methods" (see JAVADOC of IScriptEvaluator).
@@ -1258,10 +1250,10 @@ class EvaluatorTest extends CommonsCompilerTestSuite {
             + "return meth();\n"
             + "static int meth() { return 7; }\n"
         ));
-        Assert.assertEquals(7, se.evaluate());
+        Assertions.assertEquals(7, se.evaluate());
     }
 
-    @Test public void
+    @TestTemplate public void
     testOverlappingLocalMethods1() throws Exception {
 
         // The JDK implementation does not support "local methods" (see JAVADOC of IScriptEvaluator).
@@ -1274,7 +1266,7 @@ class EvaluatorTest extends CommonsCompilerTestSuite {
         });
     }
 
-    @Test public void
+    @TestTemplate public void
     testOverlappingLocalMethods2() throws Exception {
 
         // The JDK implementation does not support "local methods" (see JAVADOC of IScriptEvaluator).
@@ -1286,11 +1278,11 @@ class EvaluatorTest extends CommonsCompilerTestSuite {
                 "void meth() {}\n",
                 "void meth() {}\n"
             });
-            Assert.fail("Compilation exception expected");
+            Assertions.fail("Compilation exception expected");
         } catch (CompileException ce) {
-            Assert.assertTrue(
-                ce.getMessage(),
-                ce.getMessage().contains("Redeclaration")
+            Assertions.assertTrue(
+                ce.getMessage().contains("Redeclaration"),
+                ce.getMessage()
             );
         }
     }

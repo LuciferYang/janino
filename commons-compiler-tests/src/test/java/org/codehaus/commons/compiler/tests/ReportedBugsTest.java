@@ -30,7 +30,6 @@ package org.codehaus.commons.compiler.tests;
 import java.io.File;
 import java.io.IOException;
 import java.io.StringReader;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
@@ -56,28 +55,20 @@ import org.codehaus.commons.compiler.util.reflect.ByteArrayClassLoader;
 import org.codehaus.commons.compiler.util.resource.MapResourceCreator;
 import org.codehaus.commons.compiler.util.resource.MapResourceFinder;
 import org.codehaus.commons.compiler.util.resource.Resource;
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.junit.runners.Parameterized;
-import org.junit.runners.Parameterized.Parameters;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.TestTemplate;
 
 import util.CommonsCompilerTestSuite;
-import util.TestUtil;
+import util.CompilerFactoryParameterized;
 
 /**
  * Test cases for the bugs reported on CODEHAUS JIRA (which ceased to exist in 2015) and <a
  * href="https://github.com/janino-compiler/janino/issues">issues</a> and <a
  * href="https://github.com/janino-compiler/janino/pulls">pull requests</a> on GITHUB for project JANINO.
  */
-@RunWith(Parameterized.class) public
+@CompilerFactoryParameterized public
 class ReportedBugsTest extends CommonsCompilerTestSuite {
-
-    @Parameters(name = "CompilerFactory={0}") public static Collection<Object[]>
-    compilerFactories() throws Exception {
-        return TestUtil.getCompilerFactoriesForParameters();
-    }
 
     public
     ReportedBugsTest(ICompilerFactory compilerFactory) throws Exception {
@@ -85,7 +76,7 @@ class ReportedBugsTest extends CommonsCompilerTestSuite {
     }
 
     @SuppressWarnings("static-method") // JUNIT does not like it when "setUp()" is STATIC.
-    @Before public void
+    @BeforeEach public void
     setUp() throws Exception {
 
         // Optionally print class file disassemblies to the console.
@@ -103,7 +94,7 @@ class ReportedBugsTest extends CommonsCompilerTestSuite {
      *
      * @see <a href="https://github.com/janino-compiler/janino/pull/31">GITHUB pull request #31</a>
      */
-    @Test public void
+    @TestTemplate public void
     testPullRequest31() throws Exception {
         this.assertCompilationUnitCookable((
             ""
@@ -129,7 +120,7 @@ class ReportedBugsTest extends CommonsCompilerTestSuite {
         ));
     }
 
-    @Test public void
+    @TestTemplate public void
     testPullRequest46() throws Exception {
         String params254 = (
             ""
@@ -157,7 +148,7 @@ class ReportedBugsTest extends CommonsCompilerTestSuite {
         this.assertClassBodyUncookable("public static void foo(" + params254 + ", long a) {}");
     }
 
-    @Test public void
+    @TestTemplate public void
     testBug48() throws Exception {
         this.assertCompilationUnitMainExecutable((
             ""
@@ -184,7 +175,7 @@ class ReportedBugsTest extends CommonsCompilerTestSuite {
         ), "demo.Service");
     }
 
-    @Test public void
+    @TestTemplate public void
     testBug54a() throws Exception {
         this.assertScriptReturnsTrue(
             ""
@@ -214,7 +205,7 @@ class ReportedBugsTest extends CommonsCompilerTestSuite {
         );
     }
 
-    @Test public void
+    @TestTemplate public void
     testBug54b() throws Exception {
         this.assertClassBodyCookable(
             ""
@@ -239,7 +230,7 @@ class ReportedBugsTest extends CommonsCompilerTestSuite {
         );
     }
 
-    @Test public void
+    @TestTemplate public void
     testBug54c() throws Exception {
         this.assertClassBodyCookable(
             ""
@@ -256,7 +247,7 @@ class ReportedBugsTest extends CommonsCompilerTestSuite {
         );
     }
 
-    @Test public void
+    @TestTemplate public void
     testBug54d() throws Exception {
         this.assertClassBodyCookable(
             ""
@@ -273,7 +264,7 @@ class ReportedBugsTest extends CommonsCompilerTestSuite {
         );
     }
 
-    @Test public void
+    @TestTemplate public void
     testBug54e() throws Exception {
         this.assertClassBodyCookable(
             ""
@@ -285,7 +276,7 @@ class ReportedBugsTest extends CommonsCompilerTestSuite {
         );
     }
 
-    @Test public void
+    @TestTemplate public void
     testBug54f() throws Exception {
         this.assertClassBodyCookable(
             ""
@@ -297,7 +288,7 @@ class ReportedBugsTest extends CommonsCompilerTestSuite {
         );
     }
 
-    @Test public void
+    @TestTemplate public void
     testBug54g() throws Exception {
         this.assertClassBodyCookable(
             ""
@@ -323,7 +314,7 @@ class ReportedBugsTest extends CommonsCompilerTestSuite {
         );
     }
 
-    @Test public void
+    @TestTemplate public void
     testBug54h() throws Exception {
         this.assertScriptExecutable(
             ""
@@ -337,7 +328,7 @@ class ReportedBugsTest extends CommonsCompilerTestSuite {
         );
     }
 
-    @Test public void
+    @TestTemplate public void
     testBug55() throws Exception {
         this.assertCompilationUnitCookable(
             ""
@@ -347,7 +338,7 @@ class ReportedBugsTest extends CommonsCompilerTestSuite {
         );
     }
 
-    @Test public void
+    @TestTemplate public void
     testBug56() throws Exception {
         this.assertScriptCookable(
             ""
@@ -372,7 +363,7 @@ class ReportedBugsTest extends CommonsCompilerTestSuite {
         );
     }
 
-    @Test public void
+    @TestTemplate public void
     testBug63() throws Exception {
         String cnIPred = IPred.class.getCanonicalName();
         String cnPred  = Pred.class.getCanonicalName();
@@ -392,7 +383,7 @@ class ReportedBugsTest extends CommonsCompilerTestSuite {
         );
     }
 
-    @Test public void
+    @TestTemplate public void
     testBug69() throws Exception {
         this.assertCompilationUnitMainExecutable((
             ""
@@ -424,7 +415,7 @@ class ReportedBugsTest extends CommonsCompilerTestSuite {
         ), "Test");
     }
 
-    @Test public void
+    @TestTemplate public void
     testBug70() throws Exception {
         this.assertClassBodyCookable(
             ""
@@ -441,7 +432,7 @@ class ReportedBugsTest extends CommonsCompilerTestSuite {
         );
     }
 
-    @Test public void
+    @TestTemplate public void
     testBug71() throws Exception {
         this.assertCompilationUnitMainReturnsTrue((
             ""
@@ -487,13 +478,13 @@ class ReportedBugsTest extends CommonsCompilerTestSuite {
         ), "SCI");
     }
 
-    @Test public void
+    @TestTemplate public void
     testBug80() throws Exception {
         // Expression compilation is said to throw StackOverflowError!?
         this.assertExpressionUncookable("(10).total >= 100.0 ? 0.0 : 7.95");
     }
 
-    @Test public void
+    @TestTemplate public void
     testBug81() throws Exception {
         // IncompatibleClassChangeError when invoking getClass() on interface references
         this.assertScriptExecutable(
@@ -506,13 +497,13 @@ class ReportedBugsTest extends CommonsCompilerTestSuite {
         );
     }
 
-    @Test public void
+    @TestTemplate public void
     testBug99() throws Exception {
         // ConcurrentModificationException due to instance variable of Class type initialized using a class literal
         this.assertCompilationUnitCookable("class Test{Class c = String.class;}");
     }
 
-    @Test public void
+    @TestTemplate public void
     testBug102() throws Exception {
         // Static initializers are not executed
         this.assertCompilationUnitMainReturnsTrue((
@@ -533,14 +524,14 @@ class ReportedBugsTest extends CommonsCompilerTestSuite {
         ISimpleCompiler compiler = this.compilerFactory.newSimpleCompiler();
         compiler.cook(new StringReader("public class Test{static{System.setProperty(\"foo\", \"bar\");}}"));
         Class<?> testClass = compiler.getClassLoader().loadClass("Test"); // Only loads the class (JLS7 12.2).
-        Assert.assertNull(System.getProperty("foo"));
+        Assertions.assertNull(System.getProperty("foo"));
         testClass.newInstance(); // Initializes the class (JLS7 12.4).
-        Assert.assertEquals("bar", System.getProperty("foo"));
+        Assertions.assertEquals("bar", System.getProperty("foo"));
         System.getProperties().remove("foo");
-        Assert.assertNull(System.getProperty("foo"));
+        Assertions.assertNull(System.getProperty("foo"));
     }
 
-    @Test public void
+    @TestTemplate public void
     testBug105() throws Exception {
         // Possible to call a method of an enclosing class as if it was a member of an inner class
         this.assertClassBodyUncookable(
@@ -567,7 +558,7 @@ class ReportedBugsTest extends CommonsCompilerTestSuite {
         );
     }
 
-    @Test public void
+    @TestTemplate public void
     testBug106() throws Exception {
         this.assertJavaSourceLoadable(new File("src/test/resources/Bug 106"), "b.C3");
         this.assertCompilationUnitMainReturnsTrue((
@@ -589,7 +580,7 @@ class ReportedBugsTest extends CommonsCompilerTestSuite {
         );
     }
 
-    @Test public void
+    @TestTemplate public void
     testBug147() throws Exception {
         this.assertCompilationUnitCookable(
             ""
@@ -608,24 +599,24 @@ class ReportedBugsTest extends CommonsCompilerTestSuite {
         );
     }
 
-    @Test public void
+    @TestTemplate public void
     testBug149() throws Exception {
 
         // JLS7 3.10.6: "aaa\/bbb" contains an invalid escape sequence: "\/".
         this.assertExpressionUncookable("\"aaa\\/bbb\"");
     }
 
-    @SuppressWarnings("deprecation") @Test public void
+    @SuppressWarnings("deprecation") @TestTemplate public void
     testBug157() throws Exception {
         this.compilerFactory.newExpressionEvaluator().setReturnType(Long.class);
     }
 
-    @Test public void
+    @TestTemplate public void
     testBug153_1() throws Exception {
         this.assertScriptExecutable("Comparable x = 5.0;");
     }
 
-    @Test public void
+    @TestTemplate public void
     testBug153_2() throws Exception {
 
         // JLS7 5.5 says about casting conversion:
@@ -639,12 +630,12 @@ class ReportedBugsTest extends CommonsCompilerTestSuite {
         this.assertScriptExecutable("Comparable x = (Comparable) 5.0;");
     }
 
-    @Test public void
+    @TestTemplate public void
     testBug153_3() throws Exception {
         this.assertScriptExecutable("long x = new Integer(8);");
     }
 
-    @Test public void
+    @TestTemplate public void
     testBug153_4() throws Exception {
 
         // JLS7 5.5 says about casting conversion:
@@ -658,7 +649,7 @@ class ReportedBugsTest extends CommonsCompilerTestSuite {
         this.assertScriptExecutable("long x = (long) new Integer(8);");
     }
 
-    @Test public void
+    @TestTemplate public void
     testBug161_1() throws Exception {
         this.assertCompilationUnitCookable(
             ""
@@ -670,7 +661,7 @@ class ReportedBugsTest extends CommonsCompilerTestSuite {
         );
     }
 
-    @Test public void
+    @TestTemplate public void
     testBug161_2() throws Exception {
         this.assertCompilationUnitCookable(
             ""
@@ -688,7 +679,7 @@ class ReportedBugsTest extends CommonsCompilerTestSuite {
         );
     }
 
-    @Test public void
+    @TestTemplate public void
     testBug162() throws Exception {
         this.assertCompilationUnitCookable(
             ""
@@ -710,7 +701,7 @@ class ReportedBugsTest extends CommonsCompilerTestSuite {
         );
     }
 
-    @Test public void
+    @TestTemplate public void
     testBug163() throws Exception {
         this.assertClassBodyCookable(
             ""
@@ -732,7 +723,7 @@ class ReportedBugsTest extends CommonsCompilerTestSuite {
         );
     }
 
-    @Test public void
+    @TestTemplate public void
     testBug169() throws Exception {
         this.assertCompilationUnitCookable(
             ""
@@ -830,7 +821,7 @@ class ReportedBugsTest extends CommonsCompilerTestSuite {
         );
     }
 
-    @Test public void
+    @TestTemplate public void
     testBug172() throws Exception {
         String cnFirst = First.class.getCanonicalName();
         this.assertCompilationUnitCookable(
@@ -845,14 +836,14 @@ class ReportedBugsTest extends CommonsCompilerTestSuite {
         );
     }
 
-    @Test public void
+    @TestTemplate public void
     testBug179() throws Exception {
         IExpressionEvaluator ee = this.compilerFactory.newExpressionEvaluator();
         ee.setExpressionType(Object[].class);
         ee.cook("new Object[] { 1, \"foo\", 3, 4 }");
     }
 
-    @Test public void
+    @TestTemplate public void
     testBug180() throws Exception {
 
 //        System.out.println(System.getProperty("java.version"));
@@ -871,12 +862,12 @@ class ReportedBugsTest extends CommonsCompilerTestSuite {
         sc.cook(script);
     }
 
-    @Test public void
+    @TestTemplate public void
     testBug182() throws Exception {
         this.assertExpressionCookable("System.currentTimeMillis() == 7 ? Double.valueOf(1) : Float.valueOf(2)");
     }
 
-    @Test public void
+    @TestTemplate public void
     testBug184() throws Exception {
         this.assertCompilationUnitCookable(
             ""
@@ -902,7 +893,7 @@ class ReportedBugsTest extends CommonsCompilerTestSuite {
      * <a href="https://github.com/janino-compiler/janino/issues/6">Issue #6: Assertion error for public static final
      * field declaration</a>
      */
-    @Test public void
+    @TestTemplate public void
     testIssue6() throws Exception {
         this.assertCompilationUnitCookable(
             ""
@@ -917,7 +908,7 @@ class ReportedBugsTest extends CommonsCompilerTestSuite {
      * <a href="https://github.com/janino-compiler/janino/issues/53">Issue #53: Cannot compile enums</a>
      * @throws Exception
      */
-    @Test public void
+    @TestTemplate public void
     testIssue53() throws Exception {
         AbstractJavaSourceClassLoader jscl = this.compilerFactory.newJavaSourceClassLoader();
 
@@ -930,15 +921,15 @@ class ReportedBugsTest extends CommonsCompilerTestSuite {
             "???"
         );
 
-        Assert.assertTrue(jscl.loadClass("pkg1.Enum1").getDeclaredField(fieldName).getType().isArray());
-        Assert.assertTrue(jscl.loadClass("pkg2.Enum1").getDeclaredField(fieldName).getType().isArray());
+        Assertions.assertTrue(jscl.loadClass("pkg1.Enum1").getDeclaredField(fieldName).getType().isArray());
+        Assertions.assertTrue(jscl.loadClass("pkg2.Enum1").getDeclaredField(fieldName).getType().isArray());
     }
 
     /**
      * <a href="https://github.com/janino-compiler/janino/issues/65">Issue #65:Compilation Error Messages Generated by
      * JDK</a>
      */
-    @Test public void
+    @TestTemplate public void
     testIssue65() throws Exception {
         ReportedBugsTest.assertUncookableLocation(
             "File 'FILENAME', Line 5, Column 9",
@@ -960,7 +951,7 @@ class ReportedBugsTest extends CommonsCompilerTestSuite {
         );
     }
 
-    @Test public void
+    @TestTemplate public void
     testIssue65_tabWidth() throws Exception {
         ReportedBugsTest.assertUncookableLocation(
             "File 'FILENAME', Line 5, Column 25",
@@ -982,7 +973,7 @@ class ReportedBugsTest extends CommonsCompilerTestSuite {
         );
     }
 
-    @Test public void
+    @TestTemplate public void
     testIssue65_classBodyEvaluator() throws Exception {
         ReportedBugsTest.assertUncookableLocation(
             "File 'FILENAME', Line 4, Column 5",
@@ -1000,7 +991,7 @@ class ReportedBugsTest extends CommonsCompilerTestSuite {
         );
     }
 
-    @Test public void
+    @TestTemplate public void
     testIssue65_scriptEvaluator() throws Exception {
         ReportedBugsTest.assertUncookableLocation(
             "File 'FILENAME', Line 1, Column 7",
@@ -1009,7 +1000,7 @@ class ReportedBugsTest extends CommonsCompilerTestSuite {
         );
     }
 
-    @Test public void
+    @TestTemplate public void
     testIssue65_scriptEvaluators() throws Exception {
         ReportedBugsTest.assertUncookableLocation(
             "File 'FILENAME2', Line 4, Column 7",
@@ -1020,7 +1011,7 @@ class ReportedBugsTest extends CommonsCompilerTestSuite {
         );
     }
 
-    @Test public void
+    @TestTemplate public void
     testIssue69_IncompatibleClassChangeError_when_evaluating_against_janino9plus() throws Exception {
 
         if (CommonsCompilerTestSuite.JVM_VERSION < 8) return;
@@ -1032,24 +1023,24 @@ class ReportedBugsTest extends CommonsCompilerTestSuite {
 //            ee.setTargetVersion(8);
 
             ee.cook("java.util.stream.Stream.of(1, 2, 3).toArray()");
-            Assert.assertArrayEquals(new Object[] { 1, 2, 3 }, (Object[]) ee.evaluate());
+            Assertions.assertArrayEquals(new Object[] { 1, 2, 3 }, (Object[]) ee.evaluate());
         } catch (CompileException ce) {
             if (ce.getMessage().contains("only available for target version")) return;
             throw ce;
         }
     }
 
-//    @Test public void
+//    @TestTemplate public void
 //    testIssue69() throws Exception {
 //
 //        if (CommonsCompilerTestSuite.JVM_VERSION < 8) return;
 //
 //        IExpressionEvaluator ee = this.compilerFactory.newExpressionEvaluator();
 //        ee.cook("java.util.stream.Stream.of(1, 2, 3)");
-//        Assert.assertEquals("xxx", ee.evaluate());
+//        Assertions.assertEquals("xxx", ee.evaluate());
 //    }
 
-    @Test public void
+    @TestTemplate public void
     testIssue73_Operator_Ampersand_not_defined_on_types_java_lang_Integer_int() throws Exception {
         this.assertExpressionCookable("new Integer(1)&2");
     }
@@ -1058,7 +1049,7 @@ class ReportedBugsTest extends CommonsCompilerTestSuite {
      * <a href="https://github.com/janino-compiler/janino/issues/47">Issue #47: UnitCompiler fails with
      * CompileException when parent interface method is overridden in child interface with subtype return type</a>
      */
-    @Test public void
+    @TestTemplate public void
     testIssue47() throws Exception {
         ISimpleCompiler s = this.compilerFactory.newSimpleCompiler();
         s.setDebuggingInformation(true, true, true);
@@ -1081,7 +1072,7 @@ class ReportedBugsTest extends CommonsCompilerTestSuite {
      * <a href="https://github.com/janino-compiler/janino/issues/90">Issue #90: "Incompatible expression types" or
      * verification errors when using ternary expressions with null in one branch</a>
      */
-    @Test public void
+    @TestTemplate public void
     testIssue90() throws Exception {
         this.assertExpressionEvaluatesTrue("1 == (false ? null : 1)");
         this.assertScriptExecutable("boolean cond = true; Integer result = cond ? null : 1;");
@@ -1091,17 +1082,17 @@ class ReportedBugsTest extends CommonsCompilerTestSuite {
      * <a href="https://github.com/janino-compiler/janino/issues/102">Issue #102: "$" in class name can't be handled by
      * janino</a>
      */
-    @Test public void
+    @TestTemplate public void
     testIssue102__1() throws Exception {
         this.assertExpressionEvaluatable("import java.util.Map; Map.class");
     }
 
-    @Test public void
+    @TestTemplate public void
     testIssue102__2() throws Exception {
         this.assertExpressionEvaluatable("import java.util.Map; Map.Entry.class");
     }
 
-    @Test public void
+    @TestTemplate public void
     testIssue102__4() throws Exception {
         this.assertCompilationUnitMainReturnsTrue((
             ""
@@ -1114,7 +1105,7 @@ class ReportedBugsTest extends CommonsCompilerTestSuite {
         ), "Main");
     }
 
-    @Test public void
+    @TestTemplate public void
     testIssue102__5() throws Exception {
         this.assertCompilationUnitMainReturnsTrue((
             ""
@@ -1128,7 +1119,7 @@ class ReportedBugsTest extends CommonsCompilerTestSuite {
         ), "Main");
     }
 
-    @Test public void
+    @TestTemplate public void
     testIssue102__6() throws Exception {
         this.assertCompilationUnitMainReturnsTrue((
             ""
@@ -1141,7 +1132,7 @@ class ReportedBugsTest extends CommonsCompilerTestSuite {
         ), "Main");
     }
 
-    @Test public void
+    @TestTemplate public void
     testIssue102__7() throws Exception {
         this.assertCompilationUnitUncookable((
             ""
@@ -1154,7 +1145,7 @@ class ReportedBugsTest extends CommonsCompilerTestSuite {
         ));
     }
 
-    @Test public void
+    @TestTemplate public void
     testIssue102__8() throws Exception {
         CompileUnit unit1 = new CompileUnit("demo.pkg1", "A$$1", (
             ""
@@ -1177,13 +1168,13 @@ class ReportedBugsTest extends CommonsCompilerTestSuite {
         ClassLoader
         classLoader = this.compile(Thread.currentThread().getContextClassLoader(), unit1, unit2);
 
-        Assert.assertEquals(
+        Assertions.assertEquals(
             "HELLO",
             classLoader.loadClass("demo.pkg1.A$$1").getMethod("main").invoke(null)
         );
     }
 
-    @Test public void
+    @TestTemplate public void
     testIssue126() throws Exception {
 
         if (CommonsCompilerTestSuite.JVM_VERSION < 8) return;
@@ -1211,10 +1202,10 @@ class ReportedBugsTest extends CommonsCompilerTestSuite {
             + "}\n"
         ));
 
-        Assert.assertNotNull(s.getClassLoader().loadClass("issue126.Test").getConstructor().newInstance());
+        Assertions.assertNotNull(s.getClassLoader().loadClass("issue126.Test").getConstructor().newInstance());
     }
 
-    @Test public void
+    @TestTemplate public void
     testIssue144() throws Exception {
         this.assertScriptCookable("int a = 7, b = 5; Object o = new Object[] { a,     b     };");
         this.assertScriptCookable("int a = 7, b = 5; Object o = new Object[] { a < b, b     };");
@@ -1223,7 +1214,7 @@ class ReportedBugsTest extends CommonsCompilerTestSuite {
         this.assertScriptCookable("import java.util.Map; Map<Long, Long> a;");
     }
 
-    @Test public void
+    @TestTemplate public void
     testPullRequest146() throws Exception {
         this.assertCompilationUnitCookable((
             ""
@@ -1256,7 +1247,7 @@ class ReportedBugsTest extends CommonsCompilerTestSuite {
         ));
     }
 
-    @Test public void
+    @TestTemplate public void
     testIssue151() throws Exception {
 
         // The original code was reduced to this snippet:
@@ -1329,10 +1320,10 @@ class ReportedBugsTest extends CommonsCompilerTestSuite {
     assertUncookableLocation(String expected, ICookable cookable, String text) {
         try {
             cookable.cook("FILENAME", text);
-            Assert.fail();
+            Assertions.fail();
         } catch (CompileException ce) {
             Location loc = ce.getLocation();
-            Assert.assertEquals(ce.toString(), expected, String.valueOf(loc));
+            Assertions.assertEquals(expected, String.valueOf(loc), ce.toString());
         }
     }
 
@@ -1346,14 +1337,14 @@ class ReportedBugsTest extends CommonsCompilerTestSuite {
                 for (int i = 0; i < text.length; i++) fileNames[i] = "FILENAME" + i;
                 cookable.cook(fileNames, text);
             }
-            Assert.fail();
+            Assertions.fail();
         } catch (CompileException ce) {
             Location loc = ce.getLocation();
-            Assert.assertEquals(expected, String.valueOf(loc));
+            Assertions.assertEquals(expected, String.valueOf(loc));
         }
     }
 
-    @Test public void
+    @TestTemplate public void
     testIssue165() throws Exception {
         Thread.currentThread().getContextClassLoader().loadClass("com.company.user.Country");
 
@@ -1365,14 +1356,14 @@ class ReportedBugsTest extends CommonsCompilerTestSuite {
         ));
     }
 
-    @Test public void
+    @TestTemplate public void
     testIssue168() throws Exception {
         ISimpleCompiler sc = this.compilerFactory.newSimpleCompiler();
         // Reference a package in the *classpath* (not the bootclasspath!):
         sc.cook("import de.unkrig.jdisasm.Disassembler;");
     }
 
-    @Test public void
+    @TestTemplate public void
     testIssue169() throws Exception {
         this.assertCompilationUnitMainExecutable((
             ""
@@ -1397,7 +1388,7 @@ class ReportedBugsTest extends CommonsCompilerTestSuite {
         ), "Main");
     }
 
-    @Test public void
+    @TestTemplate public void
     testIssue172__1() throws Exception {
         this.assertCompilationUnitMainReturnsTrue((
             ""
@@ -1414,7 +1405,7 @@ class ReportedBugsTest extends CommonsCompilerTestSuite {
         ), "test");
     }
 
-    @Test public void
+    @TestTemplate public void
     testIssue172__2() throws Exception {
 
         this.assertCompilationUnitMainReturnsTrue((
@@ -1435,7 +1426,7 @@ class ReportedBugsTest extends CommonsCompilerTestSuite {
         ), "test");
     }
 
-    @Test public void
+    @TestTemplate public void
     testIssue172__3() throws Exception {
 
         this.assertCompilationUnitMainExecutable((
@@ -1455,14 +1446,14 @@ class ReportedBugsTest extends CommonsCompilerTestSuite {
         ), "test");
     }
 
-    @Test
+    @TestTemplate
     public void
     testIssue174__SmallMethod() throws Exception {
         String  body = ReportedBugsTest.getClassBody(10);
         this.createObject(body);
     }
 
-    @Test
+    @TestTemplate
     public void
     testIssue174__BigMethod() throws Exception {
         // Generate inefficient code with lots of assignments.
@@ -1545,7 +1536,7 @@ class ReportedBugsTest extends CommonsCompilerTestSuite {
     /**
      * Supposed to reproduce https://github.com/janino-compiler/janino/issues/174#issuecomment-1243022653, but doesn't.
      */
-    @Test public void
+    @TestTemplate public void
     testIssue174__JaninoCompilerTest() throws Exception {
 
 //        // public void compile_long_method(@TempDir Path tempDir) throws Exception {
@@ -1613,7 +1604,7 @@ class ReportedBugsTest extends CommonsCompilerTestSuite {
 
     // --------------------
 
-    @Test
+    @TestTemplate
     public void
     testIssue177() throws Exception {
         this.assertCompilationUnitMainExecutable((
@@ -1628,7 +1619,7 @@ class ReportedBugsTest extends CommonsCompilerTestSuite {
     }
 
     // TODO: Doesn't reproduce the problem!
-    @Test
+    @TestTemplate
     public void
     testIssue181() throws Exception {
         this.assertCompilationUnitCookable(
@@ -1642,7 +1633,7 @@ class ReportedBugsTest extends CommonsCompilerTestSuite {
         );
     }
 
-    @Test public void
+    @TestTemplate public void
     testIssue185() throws Exception {
         this.assertScriptCookable(
             ""
@@ -1654,7 +1645,7 @@ class ReportedBugsTest extends CommonsCompilerTestSuite {
         );
     }
 
-    @Test public void
+    @TestTemplate public void
     testIssue187() throws Exception {
         this.assertCompilationUnitMainReturnsTrue((
             ""
@@ -1672,7 +1663,7 @@ class ReportedBugsTest extends CommonsCompilerTestSuite {
         ), "MyClass");
     }
 
-    @Test public void
+    @TestTemplate public void
     testIssue188() throws Exception {
         this.assertScriptExecutable("Object o = true ? (String) null : \"\";");
         this.assertScriptExecutable("Object o = true ? (Object) null : \"\";");
@@ -1682,7 +1673,7 @@ class ReportedBugsTest extends CommonsCompilerTestSuite {
         this.assertScriptExecutable("String s2 = new StringBuilder().append(true ? null : \"abc\").toString(); // <= InternalCompilerException\n");
     }
 
-    @Test public void
+    @TestTemplate public void
     testIssue195() throws Exception {
 
         this.assertCompilationUnitUncookable(
@@ -1694,7 +1685,7 @@ class ReportedBugsTest extends CommonsCompilerTestSuite {
         );
     }
 
-    @Test public void
+    @TestTemplate public void
     testIssue201() throws Exception {
 
         // That should be enough to cause a stack overflow:
@@ -1715,7 +1706,7 @@ class ReportedBugsTest extends CommonsCompilerTestSuite {
         return sb.toString();
     }
 
-    @Test public void
+    @TestTemplate public void
     testIssue208UnconditionalForWithUpdateWithBodyThatCannotCompleteNormally() throws Exception {
 
         String body = (
@@ -1741,7 +1732,7 @@ class ReportedBugsTest extends CommonsCompilerTestSuite {
         this.assertCompilationUnitMainReturnsTrue(body, "MyClass");
     }
 
-    @Test public void
+    @TestTemplate public void
     testIssue208UnconditionalForWithoutUpdateWithBodyThatCannotCompleteNormally() throws Exception {
 
         String body = (
@@ -1767,7 +1758,7 @@ class ReportedBugsTest extends CommonsCompilerTestSuite {
         this.assertCompilationUnitMainReturnsTrue(body, "MyClass");
     }
 
-    @Test public void
+    @TestTemplate public void
     testIssue208UnconditionalWhileWithBodyThatCannotCompleteNormally() throws Exception {
 
         String body = (
@@ -1793,7 +1784,7 @@ class ReportedBugsTest extends CommonsCompilerTestSuite {
         this.assertCompilationUnitMainReturnsTrue(body, "MyClass");
     }
 
-    @Test public void
+    @TestTemplate public void
     testIssue208WhileWithBodyThatCannotCompleteNormally() throws Exception {
 
         String body = (
@@ -1819,7 +1810,7 @@ class ReportedBugsTest extends CommonsCompilerTestSuite {
         this.assertCompilationUnitMainReturnsTrue(body, "MyClass");
     }
 
-    @Test public void
+    @TestTemplate public void
     testIssue208DoWithBodyThatCannotCompleteNormally1() throws Exception {
 
         String body = (
@@ -1845,7 +1836,7 @@ class ReportedBugsTest extends CommonsCompilerTestSuite {
         this.assertCompilationUnitMainReturnsTrue(body, "MyClass");
     }
 
-    @Test public void
+    @TestTemplate public void
     testIssue208DoWithBodyThatCannotCompleteNormally2() throws Exception {
 
         String body = (
@@ -1871,7 +1862,7 @@ class ReportedBugsTest extends CommonsCompilerTestSuite {
         this.assertCompilationUnitMainReturnsTrue(body, "MyClass");
     }
 
-    @Test public void
+    @TestTemplate public void
     testIssue208LabeledStatementWithBodyThatCannotCompleteNormally() throws Exception {
 
         String body = (
@@ -1897,7 +1888,7 @@ class ReportedBugsTest extends CommonsCompilerTestSuite {
         this.assertCompilationUnitMainReturnsTrue(body, "MyClass");
     }
 
-    @Test public void
+    @TestTemplate public void
     testIssue210CompilerExceptionWithStaticInnerClasses() throws Exception {
 
         String body = (
@@ -1939,7 +1930,7 @@ class ReportedBugsTest extends CommonsCompilerTestSuite {
         this.assertCompilationUnitMainReturnsTrue(body, "MyClass");
     }
 
-    @Test public void
+    @TestTemplate public void
     testIssue212AssignmentConversionNotPossibleFromTypeInterfaceClassToTypeAbstractClass() throws Exception {
 
         String body = (

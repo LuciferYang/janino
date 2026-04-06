@@ -31,7 +31,6 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.lang.reflect.Array;
 import java.util.Arrays;
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.SortedMap;
@@ -57,22 +56,19 @@ import org.codehaus.commons.compiler.util.resource.Resource;
 import org.codehaus.commons.compiler.util.resource.ResourceFinder;
 import org.codehaus.commons.compiler.util.resource.StringResource;
 import org.codehaus.commons.nullanalysis.Nullable;
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Ignore;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.junit.runners.Parameterized;
-import org.junit.runners.Parameterized.Parameters;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.TestTemplate;
 
-import util.TestUtil;
+import util.CompilerFactoryParameterized;
 
 // SUPPRESS CHECKSTYLE JavadocMethod:9999
 
 /**
  * Unit tests for the {@link SimpleCompiler}.
  */
-@RunWith(Parameterized.class) public
+@CompilerFactoryParameterized public
 class CompilerTest {
 
     private static final String COMMONS_COMPILER_SRC     = "../commons-compiler/src/main/java";
@@ -89,9 +85,6 @@ class CompilerTest {
     private final boolean                             isJdk;
     @SuppressWarnings("unused") private final boolean isJanino;
 
-    @Parameters(name = "CompilerFactory={0}") public static Collection<Object[]>
-    compilerFactories() throws Exception { return TestUtil.getCompilerFactoriesForParameters(); }
-
     public
     CompilerTest(ICompilerFactory compilerFactory) {
 
@@ -102,7 +95,7 @@ class CompilerTest {
         this.isJanino          = this.compilerFactoryId.equals("org.codehaus.janino");
     }
 
-    @Before
+    @BeforeEach
     public void
     setUp() throws Exception {
     }
@@ -110,8 +103,8 @@ class CompilerTest {
     /**
      * Another attempt to reproduce issue #32... still no success.
      */
-    @Ignore
-    @Test public void
+    @Disabled
+    @TestTemplate public void
     testSelfCompileParallel() throws Exception {
 
         final Throwable[] ex = new Throwable[1];
@@ -142,7 +135,7 @@ class CompilerTest {
         if (ex[0] != null) throw new AssertionError(ex[0]);
     }
 
-    @Test public void
+    @TestTemplate public void
     testSelfCompile() throws Exception {
 
         File[] sourceFiles  = {
@@ -220,7 +213,7 @@ class CompilerTest {
 
             // Compare "classFileMap1" and "classFileMap3". We cannot use "Map.equals()" because we
             // want to check byte-by-byte identity rather than reference identity.
-            Assert.assertEquals(classFileMap1.keySet(), classFileMap3.keySet());
+            Assertions.assertEquals(classFileMap1.keySet(), classFileMap3.keySet());
             for (Map.Entry<String, byte[]> me : classFileMap1.entrySet()) {
                 String resourceName = me.getKey();
 
@@ -232,7 +225,7 @@ class CompilerTest {
                     System.out.println("Actual:");
                     Disassembler.disassembleToStdout(actualClassFileBytes);
                 }
-                Assert.assertArrayEquals(resourceName, expectedClassFileBytes, actualClassFileBytes);
+                Assertions.assertArrayEquals(expectedClassFileBytes, actualClassFileBytes, resourceName);
             }
         }
     }
@@ -385,7 +378,7 @@ class CompilerTest {
         return result;
     }
 
-    @Test public void
+    @TestTemplate public void
     testTypeBug() throws Exception {
 
         File[] sourceFiles = {
@@ -424,7 +417,7 @@ class CompilerTest {
         b.endReporting("Generated " + classFileMap1.size() + " class files.");
     }
 
-    @Test public void
+    @TestTemplate public void
     testCompileErrors() throws Exception {
 
         MapResourceFinder sourceFinder = new MapResourceFinder();
@@ -462,7 +455,7 @@ class CompilerTest {
         this.assertUncompilable("cannot.*\\bE\\b", sourceFinder);
     }
 
-    @Test public void
+    @TestTemplate public void
     testErrorHandler() throws Exception {
         MapResourceFinder sourceFinder = new MapResourceFinder();
 
@@ -515,7 +508,7 @@ class CompilerTest {
                 compiler,
                 sourceFinder
             );
-            Assert.assertEquals(1, count[0]);
+            Assertions.assertEquals(1, count[0]);
         }
 
         // Error handler that does *not* throw a CompileException.
@@ -532,11 +525,11 @@ class CompilerTest {
                 compiler,
                 sourceFinder
             );
-            Assert.assertEquals(1, count[0]);
+            Assertions.assertEquals(1, count[0]);
         }
     }
 
-    @Test public void
+    @TestTemplate public void
     testInMemoryCompilation() throws Exception {
 
         // Set of compilation units.
@@ -566,13 +559,13 @@ class CompilerTest {
         ));
 
         final Map<String, byte[]> classes = this.compile(sourceFinder);
-        Assert.assertEquals(2, classes.size());
+        Assertions.assertEquals(2, classes.size());
 
         // Set up a class loader that finds and defined the generated classes.
         ClassLoader cl = new ByteArrayClassLoader(classes);
 
         // Now invoke "pkg1.A.main()" and assert that it returns "HELLO".
-        Assert.assertEquals("HELLO", cl.loadClass("pkg1.A").getMethod("main").invoke(null));
+        Assertions.assertEquals("HELLO", cl.loadClass("pkg1.A").getMethod("main").invoke(null));
     }
 
     private Map<String, byte[]>
@@ -602,7 +595,7 @@ class CompilerTest {
         return classes;
     }
 
-    @Test public void
+    @TestTemplate public void
     testImplicitCastTernaryOperator() throws Exception {
 
         String cu = (
@@ -627,7 +620,7 @@ class CompilerTest {
     }
 
     // https://github.com/codehaus/janino/issues/5
-    @Test public void
+    @TestTemplate public void
     testLocalVarTableGeneration() throws Exception {
         ISimpleCompiler sc = this.compilerFactory.newSimpleCompiler();
         sc.setDebuggingInformation(true, true, true);
@@ -635,7 +628,7 @@ class CompilerTest {
         sc.getClassLoader().loadClass("a.TestLocalVarTable");
     }
 
-    @Test public void
+    @TestTemplate public void
     testIssue98() throws Exception {
 
         ICompiler compiler = this.compilerFactory.newCompiler();
@@ -658,30 +651,30 @@ class CompilerTest {
         );
 
         // Invoke "pkg1.A.meth()" and verify that the return value is correct.
-        Assert.assertEquals(77, cl.loadClass("pkg1.A").getDeclaredMethod("meth").invoke(null));
+        Assertions.assertEquals(77, cl.loadClass("pkg1.A").getDeclaredMethod("meth").invoke(null));
     }
 
     private static void
     assertLessThan(@Nullable String message, int expected, int actual) {
-        Assert.assertTrue(
-            (message == null ? "" : message + ": ") + "Expected less than " + expected + ", but were " + actual,
-            actual < expected
+        Assertions.assertTrue(
+            actual < expected,
+            (message == null ? "" : message + ": ") + "Expected less than " + expected + ", but were " + actual
         );
     }
 
     private static void
     assertMoreThan(@Nullable String message, int expected, int actual) {
-        Assert.assertTrue(
-            (message == null ? "" : message + ": ") + "Expected more than " + expected + ", but were " + actual,
-            actual > expected
+        Assertions.assertTrue(
+            actual > expected,
+            (message == null ? "" : message + ": ") + "Expected more than " + expected + ", but were " + actual
         );
     }
 
     private static void
     assertFind(final String regex, final String actual) {
-        Assert.assertTrue(
-            "Expected that \"" + actual + "\" contain match of regex \"" + regex + "\"",
-            Pattern.compile(regex, Pattern.DOTALL | Pattern.CASE_INSENSITIVE).matcher(actual).find()
+        Assertions.assertTrue(
+            Pattern.compile(regex, Pattern.DOTALL | Pattern.CASE_INSENSITIVE).matcher(actual).find(),
+            "Expected that \"" + actual + "\" contain match of regex \"" + regex + "\""
         );
     }
 
@@ -689,7 +682,7 @@ class CompilerTest {
     assertUncompilable(String messageRegex, MapResourceFinder sourceFinder) throws IOException {
         try {
             this.compile(sourceFinder);
-            Assert.fail("CompileException expected");
+            Assertions.fail("CompileException expected");
         } catch (CompileException ex) {
             CompilerTest.assertFind(messageRegex, ex.getMessage());
         }
@@ -699,7 +692,7 @@ class CompilerTest {
     assertUncompilable(String messageRegex, ICompiler compiler, MapResourceFinder sourceFinder) throws IOException {
         try {
             CompilerTest.compile(compiler, sourceFinder);
-            Assert.fail("CompileException expected");
+            Assertions.fail("CompileException expected");
         } catch (CompileException ex) {
             CompilerTest.assertFind(messageRegex, ex.getMessage());
         }
