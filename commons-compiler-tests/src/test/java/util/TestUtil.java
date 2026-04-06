@@ -30,7 +30,6 @@ import java.util.List;
 
 import org.codehaus.commons.compiler.CompilerFactoryFactory;
 import org.codehaus.commons.compiler.ICompilerFactory;
-import org.junit.runners.Parameterized.Parameters;
 
 /**
  * Utility methods for testing.
@@ -39,27 +38,20 @@ public final
 class TestUtil {
 
     /**
-     * Use this method as follows:
-     * <pre>
-     *     &#64;Parameters(name = "CompilerFactory={0}")
-     *     public static Collection&lt;Object[]>
-     *     <em>any-name</em>() throws Exception {
-     *         return TestUtil.getCompilerFactoriesForParameters();
-     *     }
-     * </pre>
+     * Returns all available {@link ICompilerFactory} instances discovered on the classpath.
      *
-     * @return The available compiler factories in a format suitable for JUnit {@link Parameters}
+     * @return A non-empty list of compiler factories
      */
-    public static List<Object[]>
-    getCompilerFactoriesForParameters() throws Exception {
-        ArrayList<Object[]> f = new ArrayList<>();
+    public static List<ICompilerFactory>
+    getCompilerFactories() throws Exception {
+        List<ICompilerFactory> factories = new ArrayList<>();
         for (ICompilerFactory fact : CompilerFactoryFactory.getAllCompilerFactories(TestUtil.class.getClassLoader())) {
-            f.add(new Object[] { fact });
+            factories.add(fact);
         }
-        if (f.isEmpty()) {
+        if (factories.isEmpty()) {
             throw new RuntimeException("Could not find any Compiler Factories on the classpath");
         }
-        return f;
+        return factories;
     }
 
     private TestUtil() {}

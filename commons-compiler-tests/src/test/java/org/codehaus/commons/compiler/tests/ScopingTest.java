@@ -28,33 +28,26 @@
 package org.codehaus.commons.compiler.tests;
 
 import java.lang.reflect.Method;
-import java.util.Collection;
 
 import org.codehaus.commons.compiler.ICompilerFactory;
 import org.codehaus.commons.compiler.ISimpleCompiler;
 import org.junit.jupiter.api.Assertions;
-import org.junit.Ignore;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.junit.runners.Parameterized;
-import org.junit.runners.Parameterized.Parameters;
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.TestTemplate;
 
-import util.TestUtil;
+import util.CompilerFactoryParameterized;
 
 /**
  * Tests for the handling of 'scopes' within JANINO.
  */
-@RunWith(Parameterized.class) public
+@CompilerFactoryParameterized public
 class ScopingTest {
     private final ICompilerFactory compilerFactory;
-
-    @Parameters(name = "CompilerFactory={0}") public static Collection<Object[]>
-    compilerFactories() throws Exception { return TestUtil.getCompilerFactoriesForParameters(); }
 
     public
     ScopingTest(ICompilerFactory compilerFactory) { this.compilerFactory = compilerFactory; }
 
-    @Test public void
+    @TestTemplate public void
     testProtectedAccessAcrossPackages() throws Exception {
         ISimpleCompiler sc = this.compilerFactory.newSimpleCompiler();
         sc.cook(
@@ -70,7 +63,7 @@ class ScopingTest {
         );
     }
 
-    @Test @Ignore("Known failure - JANINO-113") public void
+    @TestTemplate @Disabled("Known failure - JANINO-113") public void
     testProtectedAccessWithinPackage() throws Exception {
         ISimpleCompiler sc = this.compilerFactory.newSimpleCompiler();
         sc.cook(
@@ -125,7 +118,7 @@ class ScopingTest {
         }
     }
 
-    @Test @Ignore("Known failure - JANINO-113") public void
+    @TestTemplate @Disabled("Known failure - JANINO-113") public void
     testComplicatedSyntheticAccess() throws Exception {
         ISimpleCompiler sc = this.compilerFactory.newSimpleCompiler();
         sc.cook(
@@ -176,7 +169,7 @@ class ScopingTest {
         }
     }
 
-    @Test @Ignore("Known failure - JANINO-113") public void
+    @TestTemplate @Disabled("Known failure - JANINO-113") public void
     testStaticInitAccessProtected() throws Exception {
         ISimpleCompiler sc = this.compilerFactory.newSimpleCompiler();
         sc.cook(

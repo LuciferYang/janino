@@ -2,7 +2,7 @@
 /*
  * Janino - An embedded Java[TM] compiler
  *
- * Copyright (c) 2018 Arno Unkrig. All rights reserved.
+ * Copyright (c) 2001-2010 Arno Unkrig. All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  * following conditions are met:
@@ -23,43 +23,24 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package org.codehaus.commons.compiler.tests;
+package util;
 
-import org.codehaus.commons.compiler.ICompilerFactory;
-import org.codehaus.commons.compiler.IExpressionEvaluator;
-import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.TestTemplate;
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
 
-import util.CommonsCompilerTestSuite;
-import util.CompilerFactoryParameterized;
+import org.junit.jupiter.api.extension.ExtendWith;
 
-@CompilerFactoryParameterized public
-class BaseClassTest extends CommonsCompilerTestSuite {
-
-    public
-    BaseClassTest(ICompilerFactory compilerFactory) { super(compilerFactory); }
-
-    public static
-    class BaseClass {
-        public int a, b;
-    }
-
-    @TestTemplate public void
-    testNewInstance() throws Exception {
-
-        IExpressionEvaluator ee = this.compilerFactory.newExpressionEvaluator();
-        ee.setExtendedClass(BaseClass.class);
-        ee.setStaticMethod(false);
-
-        ee.cook("a + b");
-
-        BaseClass instance = (BaseClass) ee.getMethod().getDeclaringClass().newInstance();
-
-        instance.a = 7;
-        instance.b = 8;
-
-        Object result = ee.getMethod().invoke(instance);
-
-        Assertions.assertEquals(15, result);
-    }
+/**
+ * Annotation that replaces JUnit 4's {@code @RunWith(Parameterized.class)} for compiler factory parameterized tests.
+ * <p>
+ * Each test method annotated with {@code @TestTemplate} will be invoked once per available {@code ICompilerFactory}.
+ * The factory is injected via the test class constructor.
+ * </p>
+ */
+@Target(ElementType.TYPE)
+@Retention(RetentionPolicy.RUNTIME)
+@ExtendWith(CompilerFactoryParameterizedExtension.class)
+public @interface CompilerFactoryParameterized {
 }

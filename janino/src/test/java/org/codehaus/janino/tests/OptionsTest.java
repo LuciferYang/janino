@@ -72,19 +72,19 @@ class OptionsTest {
             ""
             + "import java.io.Closeable;\n"
             + "import java.io.IOException;\n"
-            + "import org.junit.Assert;\n"
+            + "import org.junit.jupiter.api.Assertions;\n"
             + "\n"
             + "final int[] x = new int[1];\n"
             + "\n"
             + "try (new Closeable() {\n"
             + "    public void close() {\n"
-            + "        Assert.assertEquals(2, ++x[0]);\n"
+            + "        Assertions.assertEquals(2, ++x[0]);\n"
             + "    }\n"
             + "}) {\n"
-            + "    Assert.assertEquals(1, ++x[0]);\n"
+            + "    Assertions.assertEquals(1, ++x[0]);\n"
             + "}\n"
             + "\n"
-            + "Assert.assertEquals(3, ++x[0]);\n"
+            + "Assertions.assertEquals(3, ++x[0]);\n"
         );
 
         OptionsTest.assertScriptCompilationError("NewAnonymousClassInstance rvalue not allowed as a resource", script);

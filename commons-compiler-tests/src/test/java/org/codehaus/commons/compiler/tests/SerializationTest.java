@@ -27,30 +27,23 @@ package org.codehaus.commons.compiler.tests;
 
 import java.io.ByteArrayOutputStream;
 import java.io.ObjectOutputStream;
-import java.util.Collection;
 
 import org.codehaus.commons.compiler.CompileException;
 import org.codehaus.commons.compiler.ICompilerFactory;
 import org.codehaus.commons.compiler.ISimpleCompiler;
 import org.codehaus.commons.compiler.LocatedException;
 import org.junit.jupiter.api.Assertions;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.junit.runners.Parameterized;
-import org.junit.runners.Parameterized.Parameters;
+import org.junit.jupiter.api.TestTemplate;
 
-import util.TestUtil;
+import util.CompilerFactoryParameterized;
 
 /**
  * Tests for the serializability of JANINO data structures.
  */
-@RunWith(Parameterized.class) public
+@CompilerFactoryParameterized public
 class SerializationTest {
 
     private final ICompilerFactory compilerFactory;
-
-    @Parameters(name = "CompilerFactory={0}") public static Collection<Object[]>
-    compilerFactories() throws Exception { return TestUtil.getCompilerFactoriesForParameters(); }
 
     public
     SerializationTest(ICompilerFactory compilerFactory) { this.compilerFactory = compilerFactory; }
@@ -58,7 +51,7 @@ class SerializationTest {
     /**
      * Verifies that {@link CompileException} is serializable.
      */
-    @Test public void
+    @TestTemplate public void
     testExceptionSerializable() throws Exception {
         ISimpleCompiler compiler = this.compilerFactory.newSimpleCompiler();
         try {

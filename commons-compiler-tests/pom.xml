@@ -25,16 +25,6 @@
       <artifactId>junit-jupiter</artifactId>
       <scope>test</scope>
     </dependency>
-    <dependency>
-      <groupId>org.junit.vintage</groupId>
-      <artifactId>junit-vintage-engine</artifactId>
-      <scope>test</scope>
-    </dependency>
-    <dependency>
-      <groupId>junit</groupId>
-      <artifactId>junit</artifactId>
-      <scope>test</scope>
-    </dependency>
     <!-- These are both runtime test deps AND the modules whose coverage we aggregate.
          Scope is compile (not test) so jacoco report-aggregate can resolve their class files. -->
     <dependency>

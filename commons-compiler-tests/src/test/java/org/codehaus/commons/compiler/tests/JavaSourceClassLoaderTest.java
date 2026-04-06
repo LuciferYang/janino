@@ -28,7 +28,6 @@
 package org.codehaus.commons.compiler.tests;
 
 import java.io.File;
-import java.util.Collection;
 import java.util.ResourceBundle;
 
 import org.codehaus.commons.compiler.AbstractJavaSourceClassLoader;
@@ -36,32 +35,24 @@ import org.codehaus.commons.compiler.ICompilerFactory;
 import org.codehaus.commons.compiler.lang.ClassLoaders;
 import org.codehaus.commons.compiler.util.resource.DirectoryResourceFinder;
 import org.junit.jupiter.api.Assertions;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.junit.runners.Parameterized;
-import org.junit.runners.Parameterized.Parameters;
+import org.junit.jupiter.api.TestTemplate;
 
-import util.TestUtil;
+import util.CompilerFactoryParameterized;
 
 /**
  * Tests for the {@link IJavaSourceClassLoader}.
  */
-@RunWith(Parameterized.class) public
+@CompilerFactoryParameterized public
 class JavaSourceClassLoaderTest {
 
     private final ICompilerFactory compilerFactory;
-
-    @Parameters(name = "CompilerFactory={0}") public static Collection<Object[]>
-    compilerFactories() throws Exception {
-        return TestUtil.getCompilerFactoriesForParameters();
-    }
 
     public
     JavaSourceClassLoaderTest(ICompilerFactory compilerFactory) {
         this.compilerFactory = compilerFactory;
     }
 
-    @Test public void
+    @TestTemplate public void
     testJavaSourceClassLoader() throws Exception {
 
         ClassLoader extensionsClassLoader = JavaSourceClassLoaderTest.getExtensionsClassLoader();
@@ -82,7 +73,7 @@ class JavaSourceClassLoaderTest {
         Assertions.assertEquals(7, result);
     }
 
-    @Test public void
+    @TestTemplate public void
     testCircularSingleTypeImports() throws Exception {
         AbstractJavaSourceClassLoader jscl = this.compilerFactory.newJavaSourceClassLoader(
             ClassLoader.getSystemClassLoader().getParent()
@@ -91,7 +82,7 @@ class JavaSourceClassLoaderTest {
         jscl.loadClass("test.Func1");
     }
 
-    @Test public void
+    @TestTemplate public void
     testCircularStaticImports() throws Exception {
         AbstractJavaSourceClassLoader jscl = this.compilerFactory.newJavaSourceClassLoader(
             ClassLoader.getSystemClassLoader().getParent()
@@ -100,7 +91,7 @@ class JavaSourceClassLoaderTest {
         jscl.loadClass("test.Func1");
     }
 
-    @Test public void
+    @TestTemplate public void
     testOverloadedStaticImports() throws Exception {
         AbstractJavaSourceClassLoader jscl = this.compilerFactory.newJavaSourceClassLoader(
             ClassLoader.getSystemClassLoader().getParent()
@@ -109,7 +100,7 @@ class JavaSourceClassLoaderTest {
         jscl.loadClass("test.StaticImports");
     }
 
-    @Test public void
+    @TestTemplate public void
     testOverloadedSingleStaticImport() throws Exception {
         AbstractJavaSourceClassLoader jscl = this.compilerFactory.newJavaSourceClassLoader(
             ClassLoader.getSystemClassLoader().getParent()
@@ -118,7 +109,7 @@ class JavaSourceClassLoaderTest {
         jscl.loadClass("test.SingleStaticImport");
     }
 
-    @Test @SuppressWarnings("static-method") public void
+    @TestTemplate @SuppressWarnings("static-method") public void
     testBundles1() throws Exception {
 
         ClassLoader cl = ClassLoaders.getsResourceAsStream(
@@ -129,7 +120,7 @@ class JavaSourceClassLoaderTest {
         Assertions.assertNotNull(cl.getResourceAsStream("path/to/some_resource.txt"));
     }
 
-    @Test public void
+    @TestTemplate public void
     testBundles2() throws Exception {
 
         ClassLoader jscl = this.compilerFactory.newJavaSourceClassLoader(
@@ -142,7 +133,7 @@ class JavaSourceClassLoaderTest {
         Assertions.assertNotNull(jscl.getResourceAsStream("path/to/some_resource.txt"));
     }
 
-    @Test public void
+    @TestTemplate public void
     testBundles3() throws Exception {
         AbstractJavaSourceClassLoader jscl = this.compilerFactory.newJavaSourceClassLoader(
             ClassLoaders.getsResourceAsStream(

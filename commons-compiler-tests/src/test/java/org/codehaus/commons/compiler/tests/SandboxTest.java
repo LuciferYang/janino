@@ -25,7 +25,6 @@
 
 package org.codehaus.commons.compiler.tests;
 
-import java.lang.reflect.Field;
 import java.net.InetAddress;
 import java.net.Socket;
 import java.net.URLConnection;
@@ -35,7 +34,6 @@ import java.security.AllPermission;
 import java.security.PermissionCollection;
 import java.security.Permissions;
 import java.security.PrivilegedExceptionAction;
-import java.util.List;
 
 import org.codehaus.commons.compiler.IClassBodyEvaluator;
 import org.codehaus.commons.compiler.ICompilerFactory;
@@ -44,18 +42,16 @@ import org.codehaus.commons.compiler.ISimpleCompiler;
 import org.codehaus.commons.compiler.Sandbox;
 import org.codehaus.commons.nullanalysis.NotNullByDefault;
 import org.codehaus.commons.nullanalysis.Nullable;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.junit.runners.Parameterized;
-import org.junit.runners.Parameterized.Parameters;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.TestTemplate;
 
 import util.CommonsCompilerTestSuite;
-import util.TestUtil;
+import util.CompilerFactoryParameterized;
 
 /**
  * Test cases for the combination of JANINO with {@link Sandbox}.
  */
-@RunWith(Parameterized.class) public
+@CompilerFactoryParameterized public
 class SandboxTest extends CommonsCompilerTestSuite {
 
     private static final Permissions NO_PERMISSIONS = new Permissions();
@@ -72,16 +68,13 @@ class SandboxTest extends CommonsCompilerTestSuite {
     /**
      * Get all available compiler factories for the "CompilerFactory" JUnit parameter.
      */
-    @Parameters(name = "CompilerFactory={0}") public static List<Object[]>
-    compilerFactories() throws Exception { return TestUtil.getCompilerFactoriesForParameters(); }
-
     public
     SandboxTest(ICompilerFactory compilerFactory) throws Exception { super(compilerFactory); }
 
     /**
      * Verifies that a trivial script works in the no-permissions sandbox.
      */
-    @Test public void
+    @TestTemplate public void
     testReturnTrue() throws Exception {
 
         String script = "return true;";
@@ -91,37 +84,43 @@ class SandboxTest extends CommonsCompilerTestSuite {
     /**
      * Verifies that it is not possible to retrieve a system property.
      */
-    @Test(expected = AccessControlException.class) public void
+    @TestTemplate public void
     testGetSystemProperty() throws Exception {
 
-        String script = "System.getProperty(\"foo\"); return true;";
-        this.confinedScriptTest(script, SandboxTest.NO_PERMISSIONS).assertResultTrue();
+        Assertions.assertThrows(AccessControlException.class, () -> {
+            String script = "System.getProperty(\"foo\"); return true;";
+            this.confinedScriptTest(script, SandboxTest.NO_PERMISSIONS).assertResultTrue();
+        });
     }
 
     /**
      * Verifies that it is not possible to delete a file.
      */
-    @Test(expected = AccessControlException.class) public void
+    @TestTemplate public void
     testFileDelete() throws Exception {
 
-        String script = "return new java.io.File(\"path/to/file.txt\").delete();";
-        this.confinedScriptTest(script, SandboxTest.NO_PERMISSIONS).assertResultTrue();
+        Assertions.assertThrows(AccessControlException.class, () -> {
+            String script = "return new java.io.File(\"path/to/file.txt\").delete();";
+            this.confinedScriptTest(script, SandboxTest.NO_PERMISSIONS).assertResultTrue();
+        });
     }
 
     /**
      * Verifies that it is forbidden to list a directory.
      */
-    @Test(expected = AccessControlException.class) public void
+    @TestTemplate public void
     testFileList() throws Exception {
 
-        String script = "return new java.io.File(\"path/to/dir\").list() != null;";
-        this.confinedScriptTest(script, SandboxTest.NO_PERMISSIONS).assertResultTrue();
+        Assertions.assertThrows(AccessControlException.class, () -> {
+            String script = "return new java.io.File(\"path/to/dir\").list() != null;";
+            this.confinedScriptTest(script, SandboxTest.NO_PERMISSIONS).assertResultTrue();
+        });
     }
 
     /**
      * Verifies that {@code .class} works in the no-permissions sandbox.
      */
-    @Test public void
+    @TestTemplate public void
     testDotClass() throws Exception {
 
         String script = "return (System.class != null);";
@@ -131,7 +130,7 @@ class SandboxTest extends CommonsCompilerTestSuite {
     /**
      * Verifies that {@link Class#forName(String)} is accessible in the no-permissions sandbox.
      */
-    @Test public void
+    @TestTemplate public void
     testClassForName() throws Exception {
 
         String script = "return (System.class.forName(\"java.lang.String\") != null);";
@@ -141,18 +140,20 @@ class SandboxTest extends CommonsCompilerTestSuite {
     /**
      * Verifies that {@link Class#getDeclaredField(String)} is forbidden in the no-permissions sandbox.
      */
-    @Test(expected = AccessControlException.class) public void
+    @TestTemplate public void
     testDotClassGetDeclaredField() throws Exception {
 
-        String script = "return (String.class.getDeclaredField(\"CASE_INSENSITIVE_ORDER\") != null);";
-        this.confinedScriptTest(script, SandboxTest.NO_PERMISSIONS).assertResultTrue();
+        Assertions.assertThrows(AccessControlException.class, () -> {
+            String script = "return (String.class.getDeclaredField(\"CASE_INSENSITIVE_ORDER\") != null);";
+            this.confinedScriptTest(script, SandboxTest.NO_PERMISSIONS).assertResultTrue();
+        });
     }
 
     /**
      * Verifies that {@link Class#getDeclaredField(String)} and {@link Field#setAccessible(boolean)} <em>are</em>
      * allowed in an <em>all-permissions</em> sandbox.
      */
-    @Test public void
+    @TestTemplate public void
     testDotClassGetDeclaredFieldAllPermissions() throws Exception {
 
         // JRE 9 throws
@@ -169,7 +170,7 @@ class SandboxTest extends CommonsCompilerTestSuite {
     /**
      * Verifies that creating an {@link URLConnection} is forbidden.
      */
-    @Test(expected = AccessControlException.class) public void
+    @TestTemplate public void
     testUrlConnection1() throws Exception {
 
         // Java 7 and 8 have a design problem (or is it a bug?): The class initializer of
@@ -188,76 +189,88 @@ class SandboxTest extends CommonsCompilerTestSuite {
         // class HERE:
         new java.net.URL("http://localhost:65000").openConnection();
 
-        // Now for the actual test case:
-        String script = (
-            "return new java.net.URL(\"http://localhost:65000\").openConnection().getInputStream() != null;"
-        );
-        this.confinedScriptTest(script, SandboxTest.NO_PERMISSIONS).assertResultTrue();
+        Assertions.assertThrows(AccessControlException.class, () -> {
+            // Now for the actual test case:
+            String script = (
+                "return new java.net.URL(\"http://localhost:65000\").openConnection().getInputStream() != null;"
+            );
+            this.confinedScriptTest(script, SandboxTest.NO_PERMISSIONS).assertResultTrue();
+        });
     }
 
     /**
      * Verifies that it is forbidden to resolve host names.
      */
-    @Test(expected = AccessControlException.class) public void
+    @TestTemplate public void
     testSocketToHost() throws Exception {
 
-        String script = "return new java.net.Socket(\"localhost\", 65000) != null;";
-        this.confinedScriptTest(script, SandboxTest.NO_PERMISSIONS).assertResultTrue();
+        Assertions.assertThrows(AccessControlException.class, () -> {
+            String script = "return new java.net.Socket(\"localhost\", 65000) != null;";
+            this.confinedScriptTest(script, SandboxTest.NO_PERMISSIONS).assertResultTrue();
+        });
     }
 
     /**
      * Verifies that it is forbidden to connect to a numeric IPv4 address.
      */
-    @Test(expected = AccessControlException.class) public void
+    @TestTemplate public void
     testSocketToIpAddress() throws Exception {
 
-        String script = (
-            "return new java.net.Socket(java.net.InetAddress.getByAddress(new byte[] { 127, 0, 0, 1 }), 65000) != null;"
-        );
-        this.confinedScriptTest(script, SandboxTest.NO_PERMISSIONS).assertResultTrue();
+        Assertions.assertThrows(AccessControlException.class, () -> {
+            String script = (
+                "return new java.net.Socket(java.net.InetAddress.getByAddress(new byte[] { 127, 0, 0, 1 }), 65000) != null;"
+            );
+            this.confinedScriptTest(script, SandboxTest.NO_PERMISSIONS).assertResultTrue();
+        });
     }
 
     /**
      * Verifies that also the {@link ISimpleCompiler} checks permissions.
      */
-    @Test(expected = AccessControlException.class) public void
+    @TestTemplate public void
     testSimpleCompiler() throws Exception {
 
-        this.confinedSimpleCompilerTest(
-            "public class Foo { public static void main() { System.getProperty(\"foo\"); } }",
-            "Foo",
-            SandboxTest.NO_PERMISSIONS
-        ).assertExecutable();
+        Assertions.assertThrows(AccessControlException.class, () -> {
+            this.confinedSimpleCompilerTest(
+                "public class Foo { public static void main() { System.getProperty(\"foo\"); } }",
+                "Foo",
+                SandboxTest.NO_PERMISSIONS
+            ).assertExecutable();
+        });
     }
 
     /**
      * Verifies that also the {@link IClassBodyEvaluator} checks permissions.
      */
-    @Test(expected = AccessControlException.class) public void
+    @TestTemplate public void
     testClassBodyEvaluator() throws Exception {
 
-        this.confinedClassBodyTest(
-            "public static void main() { System.getProperty(\"foo\"); }",
-            SandboxTest.NO_PERMISSIONS
-        ).assertExecutable();
+        Assertions.assertThrows(AccessControlException.class, () -> {
+            this.confinedClassBodyTest(
+                "public static void main() { System.getProperty(\"foo\"); }",
+                SandboxTest.NO_PERMISSIONS
+            ).assertExecutable();
+        });
     }
 
     /**
      * Verifies that also the {@link IExpressionEvaluator} checks permissions.
      */
-    @Test(expected = AccessControlException.class) public void
+    @TestTemplate public void
     testExpressionEvaluator() throws Exception {
 
-        this.confinedExpressionTest(
-            "System.getProperty(\"foo\")",
-            SandboxTest.NO_PERMISSIONS
-        ).assertExecutable();
+        Assertions.assertThrows(AccessControlException.class, () -> {
+            this.confinedExpressionTest(
+                "System.getProperty(\"foo\")",
+                SandboxTest.NO_PERMISSIONS
+            ).assertExecutable();
+        });
     }
 
     /**
      * Verifies that subthreads can be created and execute successfully.
      */
-    @Test public void
+    @TestTemplate public void
     testSubthreads() throws Exception {
 
         // "Thread()" does some REFLECTION, so we must allow that.
@@ -279,30 +292,32 @@ class SandboxTest extends CommonsCompilerTestSuite {
     /**
      * Verifies that also code declared in a subthread is subject to confinement.
      */
-    @Test(expected = AccessControlException.class) public void
+    @TestTemplate public void
     testSubthreadConfinement() throws Exception {
 
-        // "Thread()" does some REFLECTION, so we must allow that.
-        Permissions permissions = new Permissions();
-        permissions.add(new RuntimePermission("accessDeclaredMembers"));
+        Assertions.assertThrows(AccessControlException.class, () -> {
+            // "Thread()" does some REFLECTION, so we must allow that.
+            Permissions permissions = new Permissions();
+            permissions.add(new RuntimePermission("accessDeclaredMembers"));
 
-        this.confinedScriptTest((
-            ""
-            + "final Object[] result = new Object[1];\n"
-            + "Thread t = new Thread() {\n"
-            + "    @Override public void run() {\n"
-            + "        try {\n"
-            + "            result[0] = new java.io.File(\"path/to/dir\").list();\n"
-            + "        } catch (Exception e) {\n"
-            + "            result[0] = e;\n"
-            + "        }\n"
-            + "    }\n"
-            + "};\n"
-            + "t.start();\n"
-            + "t.join();\n"
-            + "if (result[0] instanceof Exception) throw (Exception) result[0];\n"
-            + "return result[0] == null;\n"
-        ), permissions).assertResultTrue();
+            this.confinedScriptTest((
+                ""
+                + "final Object[] result = new Object[1];\n"
+                + "Thread t = new Thread() {\n"
+                + "    @Override public void run() {\n"
+                + "        try {\n"
+                + "            result[0] = new java.io.File(\"path/to/dir\").list();\n"
+                + "        } catch (Exception e) {\n"
+                + "            result[0] = e;\n"
+                + "        }\n"
+                + "    }\n"
+                + "};\n"
+                + "t.start();\n"
+                + "t.join();\n"
+                + "if (result[0] instanceof Exception) throw (Exception) result[0];\n"
+                + "return result[0] == null;\n"
+            ), permissions).assertResultTrue();
+        });
     }
 
     // ====================================== END OF TEST CASES ======================================

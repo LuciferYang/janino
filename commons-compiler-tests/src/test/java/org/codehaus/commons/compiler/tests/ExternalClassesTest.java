@@ -27,40 +27,30 @@
 
 package org.codehaus.commons.compiler.tests;
 
-import java.util.Collection;
-
 import org.codehaus.commons.compiler.CompileException;
 import org.codehaus.commons.compiler.ICompilerFactory;
 import org.codehaus.commons.compiler.IExpressionEvaluator;
 import org.codehaus.commons.compiler.lang.ClassLoaders;
 import org.junit.jupiter.api.Assertions;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.junit.runners.Parameterized;
-import org.junit.runners.Parameterized.Parameters;
+import org.junit.jupiter.api.TestTemplate;
 
 import for_sandbox_tests.ExternalClass;
-import util.TestUtil;
+import util.CompilerFactoryParameterized;
 
 /**
  * Tests for accessing and subclassing other classes on the classpath.
  */
-@RunWith(Parameterized.class) public
+@CompilerFactoryParameterized public
 class ExternalClassesTest {
 
     private final ICompilerFactory compilerFactory;
-
-    @Parameters(name = "CompilerFactory={0}") public static Collection<Object[]>
-    compilerFactories() throws Exception {
-        return TestUtil.getCompilerFactoriesForParameters();
-    }
 
     public
     ExternalClassesTest(ICompilerFactory compilerFactory) {
         this.compilerFactory = compilerFactory;
     }
 
-    @Test public void
+    @TestTemplate public void
     testForbiddenClass() throws Exception {
 
         // Invoke method of a class that is on the CLASSPATH of this JVM, but not on the BOOTCLASSPATH.
@@ -74,7 +64,7 @@ class ExternalClassesTest {
         }
     }
 
-    @Test public void
+    @TestTemplate public void
     testAuxiliaryClass() throws Exception {
 
         // Invoke method of allowed external class.
@@ -86,7 +76,7 @@ class ExternalClassesTest {
         Assertions.assertEquals(7, result.intValue());
     }
 
-    @Test public void
+    @TestTemplate public void
     testExternalBaseClass() throws Exception {
 
         // Invoke method of base class.

@@ -31,7 +31,6 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.lang.reflect.Array;
 import java.util.Arrays;
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.SortedMap;
@@ -58,21 +57,18 @@ import org.codehaus.commons.compiler.util.resource.ResourceFinder;
 import org.codehaus.commons.compiler.util.resource.StringResource;
 import org.codehaus.commons.nullanalysis.Nullable;
 import org.junit.jupiter.api.Assertions;
-import org.junit.Before;
-import org.junit.Ignore;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.junit.runners.Parameterized;
-import org.junit.runners.Parameterized.Parameters;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.TestTemplate;
 
-import util.TestUtil;
+import util.CompilerFactoryParameterized;
 
 // SUPPRESS CHECKSTYLE JavadocMethod:9999
 
 /**
  * Unit tests for the {@link SimpleCompiler}.
  */
-@RunWith(Parameterized.class) public
+@CompilerFactoryParameterized public
 class CompilerTest {
 
     private static final String COMMONS_COMPILER_SRC     = "../commons-compiler/src/main/java";
@@ -89,9 +85,6 @@ class CompilerTest {
     private final boolean                             isJdk;
     @SuppressWarnings("unused") private final boolean isJanino;
 
-    @Parameters(name = "CompilerFactory={0}") public static Collection<Object[]>
-    compilerFactories() throws Exception { return TestUtil.getCompilerFactoriesForParameters(); }
-
     public
     CompilerTest(ICompilerFactory compilerFactory) {
 
@@ -102,7 +95,7 @@ class CompilerTest {
         this.isJanino          = this.compilerFactoryId.equals("org.codehaus.janino");
     }
 
-    @Before
+    @BeforeEach
     public void
     setUp() throws Exception {
     }
@@ -110,8 +103,8 @@ class CompilerTest {
     /**
      * Another attempt to reproduce issue #32... still no success.
      */
-    @Ignore
-    @Test public void
+    @Disabled
+    @TestTemplate public void
     testSelfCompileParallel() throws Exception {
 
         final Throwable[] ex = new Throwable[1];
@@ -142,7 +135,7 @@ class CompilerTest {
         if (ex[0] != null) throw new AssertionError(ex[0]);
     }
 
-    @Test public void
+    @TestTemplate public void
     testSelfCompile() throws Exception {
 
         File[] sourceFiles  = {
@@ -385,7 +378,7 @@ class CompilerTest {
         return result;
     }
 
-    @Test public void
+    @TestTemplate public void
     testTypeBug() throws Exception {
 
         File[] sourceFiles = {
@@ -424,7 +417,7 @@ class CompilerTest {
         b.endReporting("Generated " + classFileMap1.size() + " class files.");
     }
 
-    @Test public void
+    @TestTemplate public void
     testCompileErrors() throws Exception {
 
         MapResourceFinder sourceFinder = new MapResourceFinder();
@@ -462,7 +455,7 @@ class CompilerTest {
         this.assertUncompilable("cannot.*\\bE\\b", sourceFinder);
     }
 
-    @Test public void
+    @TestTemplate public void
     testErrorHandler() throws Exception {
         MapResourceFinder sourceFinder = new MapResourceFinder();
 
@@ -536,7 +529,7 @@ class CompilerTest {
         }
     }
 
-    @Test public void
+    @TestTemplate public void
     testInMemoryCompilation() throws Exception {
 
         // Set of compilation units.
@@ -602,7 +595,7 @@ class CompilerTest {
         return classes;
     }
 
-    @Test public void
+    @TestTemplate public void
     testImplicitCastTernaryOperator() throws Exception {
 
         String cu = (
@@ -627,7 +620,7 @@ class CompilerTest {
     }
 
     // https://github.com/codehaus/janino/issues/5
-    @Test public void
+    @TestTemplate public void
     testLocalVarTableGeneration() throws Exception {
         ISimpleCompiler sc = this.compilerFactory.newSimpleCompiler();
         sc.setDebuggingInformation(true, true, true);
@@ -635,7 +628,7 @@ class CompilerTest {
         sc.getClassLoader().loadClass("a.TestLocalVarTable");
     }
 
-    @Test public void
+    @TestTemplate public void
     testIssue98() throws Exception {
 
         ICompiler compiler = this.compilerFactory.newCompiler();
