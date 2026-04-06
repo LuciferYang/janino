@@ -36,6 +36,8 @@ public class ExpressionCompileBenchmark {
     @Benchmark
     public IExpressionEvaluator compileSimpleArithmetic() throws Exception {
         ExpressionEvaluator ee = new ExpressionEvaluator();
+        ee.setParameters(new String[] { "a", "b" }, new Class[] { int.class, int.class });
+        ee.setExpressionType(int.class);
         ee.cook("a + b * 2");
         return ee;
     }
