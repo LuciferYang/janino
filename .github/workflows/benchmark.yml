@@ -57,7 +57,7 @@ jobs:
           auto-push: true
           github-token: ${{ secrets.GITHUB_TOKEN }}
           # Alert if benchmark regresses by more than 150%
-          alert-threshold: '150%'
+          alert-threshold: '120%'
           comment-on-alert: true
           fail-on-alert: false
           # Keep chart manageable
