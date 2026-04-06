@@ -25,23 +25,22 @@
       <artifactId>junit</artifactId>
       <scope>test</scope>
     </dependency>
+    <!-- These are both runtime test deps AND the modules whose coverage we aggregate.
+         Scope is compile (not test) so jacoco report-aggregate can resolve their class files. -->
     <dependency>
       <groupId>org.codehaus.janino</groupId>
       <artifactId>commons-compiler</artifactId>
       <version>${project.parent.version}</version>
-      <scope>test</scope>
     </dependency>
     <dependency>
       <groupId>org.codehaus.janino</groupId>
       <artifactId>janino</artifactId>
       <version>${project.parent.version}</version>
-      <scope>test</scope>
     </dependency>
     <dependency>
       <groupId>org.codehaus.janino</groupId>
       <artifactId>commons-compiler-jdk</artifactId>
       <version>${project.parent.version}</version>
-      <scope>test</scope>
     </dependency>
     <dependency>
     	<groupId>de.unkrig.jdisasm</groupId>
@@ -81,6 +80,28 @@
                 <exclude>**/SandboxTest.java</exclude>
               </excludes>
             </configuration>
+          </plugin>
+        </plugins>
+      </build>
+    </profile>
+
+    <!-- Aggregate JaCoCo coverage from all dependency modules into a single report.
+         This module runs the integration tests that cover commons-compiler, janino,
+         and commons-compiler-jdk, so it is the natural place for aggregation. -->
+    <profile>
+      <id>quality</id>
+      <build>
+        <plugins>
+          <plugin>
+            <groupId>org.jacoco</groupId>
+            <artifactId>jacoco-maven-plugin</artifactId>
+            <executions>
+              <execution>
+                <id>report-aggregate</id>
+                <phase>verify</phase>
+                <goals><goal>report-aggregate</goal></goals>
+              </execution>
+            </executions>
           </plugin>
         </plugins>
       </build>
