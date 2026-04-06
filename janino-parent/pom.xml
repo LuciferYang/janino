@@ -77,6 +77,9 @@
     <jacoco-maven-plugin.version>0.8.12</jacoco-maven-plugin.version>
     <spotbugs-maven-plugin.version>4.8.6.6</spotbugs-maven-plugin.version>
     <maven-checkstyle-plugin.version>3.6.0</maven-checkstyle-plugin.version>
+
+    <!-- Test dependency versions -->
+    <junit5.version>5.11.4</junit5.version>
   </properties>
 
   <modules>
@@ -88,6 +91,13 @@
 
   <dependencyManagement>
     <dependencies>
+      <dependency>
+        <groupId>org.junit</groupId>
+        <artifactId>junit-bom</artifactId>
+        <version>${junit5.version}</version>
+        <type>pom</type>
+        <scope>import</scope>
+      </dependency>
       <dependency>
         <groupId>junit</groupId>
         <artifactId>junit</artifactId>

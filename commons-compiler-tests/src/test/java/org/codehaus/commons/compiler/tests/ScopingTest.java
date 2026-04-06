@@ -32,7 +32,7 @@ import java.util.Collection;
 
 import org.codehaus.commons.compiler.ICompilerFactory;
 import org.codehaus.commons.compiler.ISimpleCompiler;
-import org.junit.Assert;
+import org.junit.jupiter.api.Assertions;
 import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -111,17 +111,17 @@ class ScopingTest {
         Object res;
         {   // non-static
             res = get.invoke(i, new Object[0]);
-            Assert.assertEquals(1, res);
+            Assertions.assertEquals(1, res);
             set.invoke(i, new Object[0]);
             res = get.invoke(i, new Object[0]);
-            Assert.assertEquals(11, res);
+            Assertions.assertEquals(11, res);
         }
         {   //static
             res = getS.invoke(i, new Object[0]);
-            Assert.assertEquals(2, res);
+            Assertions.assertEquals(2, res);
             setS.invoke(i, new Object[0]);
             res = getS.invoke(i, new Object[0]);
-            Assert.assertEquals(12, res);
+            Assertions.assertEquals(12, res);
         }
     }
 
@@ -168,11 +168,11 @@ class ScopingTest {
         };
         for (int i = 0; i < 3; ++i) {
             Object g1 = gets[i].invoke(inner, new Object[0]);
-            Assert.assertEquals(1, g1);
+            Assertions.assertEquals(1, g1);
             Object s1 = sets[i].invoke(inner, new Object[0]);
-            Assert.assertEquals(i, s1);
+            Assertions.assertEquals(i, s1);
             Object g2 = gets[i].invoke(inner, new Object[0]);
-            Assert.assertEquals(i, g2);
+            Assertions.assertEquals(i, g2);
         }
     }
 
@@ -207,8 +207,8 @@ class ScopingTest {
         Class<?> topClass    = sc.getClassLoader().loadClass("test.Outer");
         Method   createInner = topClass.getDeclaredMethod("createInner", new Class[0]);
         Object   t           = topClass.newInstance();
-        Assert.assertNotNull(t);
+        Assertions.assertNotNull(t);
         Object inner = createInner.invoke(t, new Object[0]);
-        Assert.assertNotNull(inner);
+        Assertions.assertNotNull(inner);
     }
 }

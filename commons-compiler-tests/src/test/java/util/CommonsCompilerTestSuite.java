@@ -43,7 +43,7 @@ import org.codehaus.commons.compiler.ISimpleCompiler;
 import org.codehaus.commons.compiler.Location;
 import org.codehaus.commons.compiler.WarningHandler;
 import org.codehaus.commons.nullanalysis.Nullable;
-import org.junit.Assert;
+import org.junit.jupiter.api.Assertions;
 
 /**
  * A base class for JUnit 4 test cases that provides easy-to-use functionality to test JANINO.
@@ -60,7 +60,7 @@ class CommonsCompilerTestSuite {
     static {
         String  jv = System.getProperty("java.specification.version");
         Matcher m  = Pattern.compile("(?:1\\.)?(\\d+)").matcher(jv);
-        Assert.assertTrue(m.matches());
+        Assertions.assertTrue(m.matches());
         JVM_VERSION = Integer.parseInt(m.group(1));
     }
 
@@ -705,9 +705,9 @@ class CommonsCompilerTestSuite {
         assertResultTrue() throws Exception {
             this.cook();
             Object result = this.execute();
-            Assert.assertNotNull("Test result not NULL", result);
-            Assert.assertSame(String.valueOf(result), Boolean.class, result.getClass());
-            Assert.assertTrue("Test result is FALSE", (Boolean) result);
+            Assertions.assertNotNull(result, "Test result not NULL");
+            Assertions.assertSame(Boolean.class, result.getClass(), String.valueOf(result));
+            Assertions.assertTrue((Boolean) result, "Test result is FALSE");
         }
 
         /**
@@ -736,9 +736,9 @@ class CommonsCompilerTestSuite {
             }
 
             Object result = this.execute();
-            Assert.assertNotNull("Test result not NULL", result);
-            Assert.assertSame(String.valueOf(result), Boolean.class, result.getClass());
-            Assert.assertTrue("Test result is FALSE", (Boolean) result);
+            Assertions.assertNotNull(result, "Test result not NULL");
+            Assertions.assertSame(Boolean.class, result.getClass(), String.valueOf(result));
+            Assertions.assertTrue((Boolean) result, "Test result is FALSE");
         }
 
         /**
@@ -748,7 +748,7 @@ class CommonsCompilerTestSuite {
         assertResultEquals(@Nullable Object expected) throws Exception {
             this.cook();
             Object result = this.execute();
-            Assert.assertEquals(expected, result);
+            Assertions.assertEquals(expected, result);
         }
 
         /**
@@ -758,7 +758,7 @@ class CommonsCompilerTestSuite {
         assertResultNull() throws Exception {
             this.cook();
             Object result = this.execute();
-            Assert.assertNull(String.valueOf(result), result);
+            Assertions.assertNull(result, String.valueOf(result));
         }
     }
 
@@ -792,17 +792,17 @@ class CommonsCompilerTestSuite {
 
     public static void
     assertLessThan(@Nullable String message, int expected, int actual) {
-        Assert.assertTrue(
-            (message == null ? "" : message + ": ") + "Expected less than " + expected + ", but were " + actual,
-            actual < expected
+        Assertions.assertTrue(
+            actual < expected,
+            (message == null ? "" : message + ": ") + "Expected less than " + expected + ", but were " + actual
         );
     }
 
     public static void
     assertMoreThan(@Nullable String message, int expected, int actual) {
-        Assert.assertTrue(
-            (message == null ? "" : message + ": ") + "Expected more than " + expected + ", but were " + actual,
-            actual > expected
+        Assertions.assertTrue(
+            actual > expected,
+            (message == null ? "" : message + ": ") + "Expected more than " + expected + ", but were " + actual
         );
     }
 }

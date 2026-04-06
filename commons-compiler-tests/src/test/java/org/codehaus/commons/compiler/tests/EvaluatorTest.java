@@ -51,7 +51,7 @@ import org.codehaus.commons.compiler.ISimpleCompiler;
 import org.codehaus.commons.compiler.Location;
 import org.codehaus.commons.compiler.util.resource.MapResourceFinder;
 import org.codehaus.commons.nullanalysis.Nullable;
-import org.junit.Assert;
+import org.junit.jupiter.api.Assertions;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -99,11 +99,11 @@ class EvaluatorTest extends CommonsCompilerTestSuite {
         se.setParameters(new String[][] { { "a", "b" }, {} }, new Class<?>[][] { { double.class, double.class }, {} });
         se.setStaticMethod(new boolean[] { true, true });
         se.cook(new String[] { "return a + b;", "return 0;" });
-        Assert.assertEquals(
+        Assertions.assertEquals(
             new Double(7.0),
             se.getMethod(0).invoke(null, new Object[] { new Double(3.0), new Double(4.0) })
         );
-        Assert.assertEquals(new Double(0.0), se.getMethod(1).invoke(null, new Object[0]));
+        Assertions.assertEquals(new Double(0.0), se.getMethod(1).invoke(null, new Object[0]));
     }
 
     @Test public void
@@ -159,14 +159,14 @@ class EvaluatorTest extends CommonsCompilerTestSuite {
         {
             Method m        = ee.getMethod(0);
             Object instance = m.getDeclaringClass().newInstance();
-            Assert.assertEquals(5, m.invoke(instance, new Object[] { 2, 3 }));
+            Assertions.assertEquals(5, m.invoke(instance, new Object[] { 2, 3 }));
         }
 
         try {
             ee.evaluate(1, new Object[0]);
-            Assert.fail("Should have thrown an InvocationTargetException");
+            Assertions.fail("Should have thrown an InvocationTargetException");
         } catch (InvocationTargetException ex) {
-            Assert.assertTrue("FileNotFoundException", ex.getTargetException() instanceof FileNotFoundException);
+            Assertions.assertTrue(ex.getTargetException() instanceof FileNotFoundException, "FileNotFoundException");
         }
 
         try {
@@ -174,7 +174,7 @@ class EvaluatorTest extends CommonsCompilerTestSuite {
             Object instance = m.getDeclaringClass().newInstance();
             m.invoke(instance, new Object[0]);
         } catch (Exception e) {
-            Assert.fail(e.getMessage());
+            Assertions.fail(e.getMessage());
         }
     }
 
@@ -204,7 +204,7 @@ class EvaluatorTest extends CommonsCompilerTestSuite {
                 + "    System.out.println(\"Got here\");\n"
                 + "}"
             );
-            Assert.fail("CompileException expected");
+            Assertions.fail("CompileException expected");
         } catch (CompileException ex) {
             ;
         }
@@ -241,7 +241,7 @@ class EvaluatorTest extends CommonsCompilerTestSuite {
         ee.setParameters(parameterNames, parameterTypes);
 
         ee.cook(expressions);
-        Assert.assertEquals(165, ee.evaluate(3 * EvaluatorTest.COUNT / 4, new Object[] { 77, 88 }));
+        Assertions.assertEquals(165, ee.evaluate(3 * EvaluatorTest.COUNT / 4, new Object[] { 77, 88 }));
     }
 
     @Test public void
@@ -275,7 +275,7 @@ class EvaluatorTest extends CommonsCompilerTestSuite {
                 }
             });
             et.assertUncookable("\"a\" is not an rvalue|cannot find symbol.*a");
-            Assert.assertEquals(1, count[0]);
+            Assertions.assertEquals(1, count[0]);
         }
 
         // Error handler that does *not* throw a CompileException.
@@ -288,7 +288,7 @@ class EvaluatorTest extends CommonsCompilerTestSuite {
             });
 
             et.assertUncookable("failed with 1 errors|error.*while compiling|unknown reason");
-            Assert.assertTrue(count[0] > 0);
+            Assertions.assertTrue(count[0] > 0);
         }
     }
 
@@ -341,14 +341,14 @@ class EvaluatorTest extends CommonsCompilerTestSuite {
             for (int j = 0; j < exp.length; ++j) {
                 if (method.getName().startsWith("getL" + j)) {
                     Class<?> res = (Class<?>) method.invoke(inst, new Object[0]);
-                    Assert.assertEquals(exp[j], res);
+                    Assertions.assertEquals(exp[j], res);
                     ++numTests;
                 }
             }
         }
         //we count tests just to make sure things didn't go horrifically wrong and
         //the above loops become empty
-        Assert.assertEquals(8, numTests);
+        Assertions.assertEquals(8, numTests);
     }
 
     @Test public void
@@ -380,9 +380,9 @@ class EvaluatorTest extends CommonsCompilerTestSuite {
             if (method.getName().startsWith("run")) {
                 try {
                     Object res = method.invoke(o, new Object[0]);
-                    Assert.fail("Method " + method + " should have failed, but got " + res);
+                    Assertions.fail("Method " + method + " should have failed, but got " + res);
                 } catch (InvocationTargetException ae) {
-                    Assert.assertTrue(ae.getTargetException() instanceof ArithmeticException);
+                    Assertions.assertTrue(ae.getTargetException() instanceof ArithmeticException);
                 }
             }
         }
@@ -409,8 +409,8 @@ class EvaluatorTest extends CommonsCompilerTestSuite {
         Method   falseMeth = c.getMethod("runFalse");
 
         Object   o = c.newInstance();
-        Assert.assertEquals(-1, trueMeth.invoke(o, new Object[0]));
-        Assert.assertEquals(1, falseMeth.invoke(o, new Object[0]));
+        Assertions.assertEquals(-1, trueMeth.invoke(o, new Object[0]));
+        Assertions.assertEquals(1, falseMeth.invoke(o, new Object[0]));
     }
 
     public static boolean
@@ -516,9 +516,8 @@ class EvaluatorTest extends CommonsCompilerTestSuite {
                         );
                         Object[] objs   = new Object[] { args[0], args[1], operator };
                         Object   actual = dm.invoke(null, objs);
-                        Assert.assertEquals(msg, exp, actual);
+                        Assertions.assertEquals(exp, actual, msg);
                     }
-
                     {
                         msg = "float: " + msg;
                         boolean exp = EvaluatorTest.compare(
@@ -532,7 +531,7 @@ class EvaluatorTest extends CommonsCompilerTestSuite {
                             operator
                         };
                         Object actual = fm.invoke(null, objs);
-                        Assert.assertEquals(msg, exp, actual);
+                        Assertions.assertEquals(exp, actual, msg);
                     }
                 }
             }
@@ -607,7 +606,7 @@ class EvaluatorTest extends CommonsCompilerTestSuite {
             } catch (Error e) {
                 throw new Error("repetitions=" + repetitions, e);
             }
-            Assert.assertEquals(2 * repetitions, res);
+            Assertions.assertEquals(2 * repetitions, res);
         }
 
     }
@@ -657,7 +656,7 @@ class EvaluatorTest extends CommonsCompilerTestSuite {
             ISimpleCompiler sc = this.compilerFactory.newSimpleCompiler();
             if (isCookable) {
                 sc.cook(cu);
-                Assert.assertNotNull(sc.getClassLoader().loadClass("test.Test").newInstance());
+                Assertions.assertNotNull(sc.getClassLoader().loadClass("test.Test").newInstance());
             } else {
                 this.assertCompilationUnitUncookable(
                     cu,
@@ -714,7 +713,7 @@ class EvaluatorTest extends CommonsCompilerTestSuite {
             Method   m   = c.getDeclaredMethod("run", new Class[0]);
             Object   o   = c.newInstance();
             Object   res = m.invoke(o, new Object[0]);
-            Assert.assertEquals(1.2D, res);
+            Assertions.assertEquals(1.2D, res);
         }
     }
     @Test public void
@@ -752,7 +751,7 @@ class EvaluatorTest extends CommonsCompilerTestSuite {
             Method   m   = c.getDeclaredMethod("run", new Class[0]);
             Object   o   = c.newInstance();
             Object   res = m.invoke(o);
-            Assert.assertEquals((double) repetitions, res);
+            Assertions.assertEquals((double) repetitions, res);
         }
     }
 
@@ -790,7 +789,7 @@ class EvaluatorTest extends CommonsCompilerTestSuite {
 
             Class<?> c = sc.getClassLoader().loadClass("test.Test");
             Object   o = c.newInstance();
-            Assert.assertNotNull(o);
+            Assertions.assertNotNull(o);
         }
     }
 
@@ -852,7 +851,7 @@ class EvaluatorTest extends CommonsCompilerTestSuite {
             Class<?> c = sc.getClassLoader().loadClass("test.Test");
             Method   m = c.getDeclaredMethod("run", new Class[0]);
             Object   o = m.invoke(null, new Object[0]);
-            Assert.assertEquals("hi 1 1.0 1.0 1 1 true try finally", o);
+            Assertions.assertEquals("hi 1 1.0 1.0 1 1 true try finally", o);
         }
 
     }
@@ -879,17 +878,17 @@ class EvaluatorTest extends CommonsCompilerTestSuite {
         sc.cook(test);
         Class<?> c  = sc.getClassLoader().loadClass("test.Test");
         Method   m0 = c.getDeclaredMethod("run", new Class[] {});
-        Assert.assertEquals(false, m0.invoke(null, new Object[0]));
+        Assertions.assertEquals(false, m0.invoke(null, new Object[0]));
 
         Method mStr = c.getDeclaredMethod("run", new Class[] { String.class });
         Method mObj = c.getDeclaredMethod("run", new Class[] { Object.class });
 
-        Assert.assertEquals(true,  mObj.invoke(null, new Object[] { "" }));
-        Assert.assertEquals(false, mObj.invoke(null, new Object[] { 1 }));
-        Assert.assertEquals(false, mObj.invoke(null, new Object[] { null }));
+        Assertions.assertEquals(true,  mObj.invoke(null, new Object[] { "" }));
+        Assertions.assertEquals(false, mObj.invoke(null, new Object[] { 1 }));
+        Assertions.assertEquals(false, mObj.invoke(null, new Object[] { null }));
 
-        Assert.assertEquals(true,  mStr.invoke(null, new Object[] { "" }));
-        Assert.assertEquals(false, mStr.invoke(null, new Object[] { null }));
+        Assertions.assertEquals(true,  mStr.invoke(null, new Object[] { "" }));
+        Assertions.assertEquals(false, mStr.invoke(null, new Object[] { null }));
     }
 
     @Test public void
@@ -1036,11 +1035,11 @@ class EvaluatorTest extends CommonsCompilerTestSuite {
         Object   t        = topClass.newInstance();
 
         StringBuilder sb = new StringBuilder();
-        Assert.assertEquals(sb.length(), get.invoke(t, new Object[] { sb }));
+        Assertions.assertEquals(sb.length(), get.invoke(t, new Object[] { sb }));
         sb.append("asdf");
-        Assert.assertEquals(sb.length(), get.invoke(t, new Object[] { sb }));
+        Assertions.assertEquals(sb.length(), get.invoke(t, new Object[] { sb }));
         sb.append("qwer");
-        Assert.assertEquals(sb.length(), get.invoke(t, new Object[] { sb }));
+        Assertions.assertEquals(sb.length(), get.invoke(t, new Object[] { sb }));
     }
 
     @Test public void
@@ -1117,8 +1116,8 @@ class EvaluatorTest extends CommonsCompilerTestSuite {
         Method   bar      = topClass.getMethod("cloneWithOutArguments");
         Object   t        = topClass.newInstance();
 
-        Assert.assertNotNull(foo.invoke(t, new Object[0]));
-        Assert.assertNotNull(bar.invoke(t, new Object[0]));
+        Assertions.assertNotNull(foo.invoke(t, new Object[0]));
+        Assertions.assertNotNull(bar.invoke(t, new Object[0]));
     }
 
     @Test public void
@@ -1203,7 +1202,7 @@ class EvaluatorTest extends CommonsCompilerTestSuite {
         ee.setExpressionType(anyType);
 
         ee.cook("3");
-        Assert.assertEquals(3, ee.evaluate());
+        Assertions.assertEquals(3, ee.evaluate());
     }
 
     @Test public void
@@ -1214,7 +1213,7 @@ class EvaluatorTest extends CommonsCompilerTestSuite {
         IExpressionEvaluator ee = this.compilerFactory.newExpressionEvaluator();
         ee.setExpressionType(anyType);
         ee.cook("\"HELLO\"");
-        Assert.assertEquals("HELLO", ee.evaluate());
+        Assertions.assertEquals("HELLO", ee.evaluate());
     }
 
     @Test public void
@@ -1224,7 +1223,7 @@ class EvaluatorTest extends CommonsCompilerTestSuite {
         ee.setExpressionType(Object.class);
 
         ee.cook("3");
-        Assert.assertEquals(3, ee.evaluate());
+        Assertions.assertEquals(3, ee.evaluate());
     }
 
     @Test public void
@@ -1234,7 +1233,7 @@ class EvaluatorTest extends CommonsCompilerTestSuite {
         ee.setExpressionType(Object.class);
 
         ee.cook("\"HELLO\"");
-        Assert.assertEquals("HELLO", ee.evaluate());
+        Assertions.assertEquals("HELLO", ee.evaluate());
     }
 
     @Test public void
@@ -1258,7 +1257,7 @@ class EvaluatorTest extends CommonsCompilerTestSuite {
             + "return meth();\n"
             + "static int meth() { return 7; }\n"
         ));
-        Assert.assertEquals(7, se.evaluate());
+        Assertions.assertEquals(7, se.evaluate());
     }
 
     @Test public void
@@ -1286,11 +1285,11 @@ class EvaluatorTest extends CommonsCompilerTestSuite {
                 "void meth() {}\n",
                 "void meth() {}\n"
             });
-            Assert.fail("Compilation exception expected");
+            Assertions.fail("Compilation exception expected");
         } catch (CompileException ce) {
-            Assert.assertTrue(
-                ce.getMessage(),
-                ce.getMessage().contains("Redeclaration")
+            Assertions.assertTrue(
+                ce.getMessage().contains("Redeclaration"),
+                ce.getMessage()
             );
         }
     }

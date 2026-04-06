@@ -56,7 +56,7 @@ import org.codehaus.commons.compiler.util.reflect.ByteArrayClassLoader;
 import org.codehaus.commons.compiler.util.resource.MapResourceCreator;
 import org.codehaus.commons.compiler.util.resource.MapResourceFinder;
 import org.codehaus.commons.compiler.util.resource.Resource;
-import org.junit.Assert;
+import org.junit.jupiter.api.Assertions;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -533,11 +533,11 @@ class ReportedBugsTest extends CommonsCompilerTestSuite {
         ISimpleCompiler compiler = this.compilerFactory.newSimpleCompiler();
         compiler.cook(new StringReader("public class Test{static{System.setProperty(\"foo\", \"bar\");}}"));
         Class<?> testClass = compiler.getClassLoader().loadClass("Test"); // Only loads the class (JLS7 12.2).
-        Assert.assertNull(System.getProperty("foo"));
+        Assertions.assertNull(System.getProperty("foo"));
         testClass.newInstance(); // Initializes the class (JLS7 12.4).
-        Assert.assertEquals("bar", System.getProperty("foo"));
+        Assertions.assertEquals("bar", System.getProperty("foo"));
         System.getProperties().remove("foo");
-        Assert.assertNull(System.getProperty("foo"));
+        Assertions.assertNull(System.getProperty("foo"));
     }
 
     @Test public void
@@ -930,8 +930,8 @@ class ReportedBugsTest extends CommonsCompilerTestSuite {
             "???"
         );
 
-        Assert.assertTrue(jscl.loadClass("pkg1.Enum1").getDeclaredField(fieldName).getType().isArray());
-        Assert.assertTrue(jscl.loadClass("pkg2.Enum1").getDeclaredField(fieldName).getType().isArray());
+        Assertions.assertTrue(jscl.loadClass("pkg1.Enum1").getDeclaredField(fieldName).getType().isArray());
+        Assertions.assertTrue(jscl.loadClass("pkg2.Enum1").getDeclaredField(fieldName).getType().isArray());
     }
 
     /**
@@ -1032,7 +1032,7 @@ class ReportedBugsTest extends CommonsCompilerTestSuite {
 //            ee.setTargetVersion(8);
 
             ee.cook("java.util.stream.Stream.of(1, 2, 3).toArray()");
-            Assert.assertArrayEquals(new Object[] { 1, 2, 3 }, (Object[]) ee.evaluate());
+            Assertions.assertArrayEquals(new Object[] { 1, 2, 3 }, (Object[]) ee.evaluate());
         } catch (CompileException ce) {
             if (ce.getMessage().contains("only available for target version")) return;
             throw ce;
@@ -1046,7 +1046,7 @@ class ReportedBugsTest extends CommonsCompilerTestSuite {
 //
 //        IExpressionEvaluator ee = this.compilerFactory.newExpressionEvaluator();
 //        ee.cook("java.util.stream.Stream.of(1, 2, 3)");
-//        Assert.assertEquals("xxx", ee.evaluate());
+//        Assertions.assertEquals("xxx", ee.evaluate());
 //    }
 
     @Test public void
@@ -1177,7 +1177,7 @@ class ReportedBugsTest extends CommonsCompilerTestSuite {
         ClassLoader
         classLoader = this.compile(Thread.currentThread().getContextClassLoader(), unit1, unit2);
 
-        Assert.assertEquals(
+        Assertions.assertEquals(
             "HELLO",
             classLoader.loadClass("demo.pkg1.A$$1").getMethod("main").invoke(null)
         );
@@ -1211,7 +1211,7 @@ class ReportedBugsTest extends CommonsCompilerTestSuite {
             + "}\n"
         ));
 
-        Assert.assertNotNull(s.getClassLoader().loadClass("issue126.Test").getConstructor().newInstance());
+        Assertions.assertNotNull(s.getClassLoader().loadClass("issue126.Test").getConstructor().newInstance());
     }
 
     @Test public void
@@ -1329,10 +1329,10 @@ class ReportedBugsTest extends CommonsCompilerTestSuite {
     assertUncookableLocation(String expected, ICookable cookable, String text) {
         try {
             cookable.cook("FILENAME", text);
-            Assert.fail();
+            Assertions.fail();
         } catch (CompileException ce) {
             Location loc = ce.getLocation();
-            Assert.assertEquals(ce.toString(), expected, String.valueOf(loc));
+            Assertions.assertEquals(expected, String.valueOf(loc), ce.toString());
         }
     }
 
@@ -1346,10 +1346,10 @@ class ReportedBugsTest extends CommonsCompilerTestSuite {
                 for (int i = 0; i < text.length; i++) fileNames[i] = "FILENAME" + i;
                 cookable.cook(fileNames, text);
             }
-            Assert.fail();
+            Assertions.fail();
         } catch (CompileException ce) {
             Location loc = ce.getLocation();
-            Assert.assertEquals(expected, String.valueOf(loc));
+            Assertions.assertEquals(expected, String.valueOf(loc));
         }
     }
 

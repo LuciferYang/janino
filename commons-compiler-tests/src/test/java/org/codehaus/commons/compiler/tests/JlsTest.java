@@ -35,11 +35,11 @@ import java.util.logging.Logger;
 
 import org.codehaus.commons.compiler.IClassBodyEvaluator;
 import org.codehaus.commons.compiler.ICompilerFactory;
-import org.junit.Assert;
+import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
 import org.junit.Assume;
 import org.junit.Before;
 import org.junit.Ignore;
-import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
 import org.junit.runners.Parameterized.Parameters;
@@ -295,13 +295,13 @@ class JlsTest extends CommonsCompilerTestSuite {
     @Test public void
     test_3_10_6__Text_Blocks_2() throws Exception {
         if (this.isJdk && CommonsCompilerTestSuite.JVM_VERSION < 15) return;
-        Assert.assertEquals("abc", this.evaluateExpression("\"\"\"   \r   abc   \"\"\""));
+        Assertions.assertEquals("abc", this.evaluateExpression("\"\"\"   \r   abc   \"\"\""));
     }
 
     @Test public void
     test_3_10_6__Text_Blocks_3() throws Exception {
         if (this.isJdk && CommonsCompilerTestSuite.JVM_VERSION < 15) return;
-        Assert.assertEquals(
+        Assertions.assertEquals(
             "Zeile 1\nZeile 2\nZeile 3\n",
             this.evaluateExpression(
                 ""
@@ -317,7 +317,7 @@ class JlsTest extends CommonsCompilerTestSuite {
     @Test public void
     test_3_10_6__Text_Blocks_4() throws Exception {
         if (this.isJdk && CommonsCompilerTestSuite.JVM_VERSION < 15) return;
-        Assert.assertEquals(
+        Assertions.assertEquals(
             "          Zeile 1\n\tZeile 2\n  \t   \tZeile 3\n",
             this.evaluateExpression(
                 ""
@@ -1503,7 +1503,7 @@ class JlsTest extends CommonsCompilerTestSuite {
         if (this.isJdk && CommonsCompilerTestSuite.JVM_VERSION < 7) return;
 
         String s1 = "AaAaAa", s2 = "AaAaBB";
-        Assert.assertEquals(s1.hashCode(), s2.hashCode());
+        Assertions.assertEquals(s1.hashCode(), s2.hashCode());
 
         this.assertScriptReturnsTrue(
             ""
@@ -3165,7 +3165,7 @@ class JlsTest extends CommonsCompilerTestSuite {
             + "return c;"
         );
         final Object[] result = (Object[]) this.assertScriptExecutable(script, Object[].class);
-        Assert.assertArrayEquals(new Object[] {
+        Assertions.assertArrayEquals(new Object[] {
             3,
             3,
             3,

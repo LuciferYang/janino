@@ -35,7 +35,7 @@ import org.codehaus.commons.compiler.AbstractJavaSourceClassLoader;
 import org.codehaus.commons.compiler.ICompilerFactory;
 import org.codehaus.commons.compiler.lang.ClassLoaders;
 import org.codehaus.commons.compiler.util.resource.DirectoryResourceFinder;
-import org.junit.Assert;
+import org.junit.jupiter.api.Assertions;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
@@ -79,7 +79,7 @@ class JavaSourceClassLoaderTest {
         Object ee = jscl.loadClass("org.codehaus.janino.ExpressionEvaluator").getConstructor().newInstance();
         ee.getClass().getMethod("cook", String.class).invoke(ee, "7");
         Object result = ee.getClass().getMethod("evaluate", Object[].class).invoke(ee, new Object[] { null });
-        Assert.assertEquals(7, result);
+        Assertions.assertEquals(7, result);
     }
 
     @Test public void
@@ -126,7 +126,7 @@ class JavaSourceClassLoaderTest {
             ClassLoader.getSystemClassLoader().getParent()
         );
 
-        Assert.assertNotNull(cl.getResourceAsStream("path/to/some_resource.txt"));
+        Assertions.assertNotNull(cl.getResourceAsStream("path/to/some_resource.txt"));
     }
 
     @Test public void
@@ -139,7 +139,7 @@ class JavaSourceClassLoaderTest {
             )
         );
 
-        Assert.assertNotNull(jscl.getResourceAsStream("path/to/some_resource.txt"));
+        Assertions.assertNotNull(jscl.getResourceAsStream("path/to/some_resource.txt"));
     }
 
     @Test public void
@@ -153,8 +153,8 @@ class JavaSourceClassLoaderTest {
         jscl.setSourceFinder(new DirectoryResourceFinder(new File("src/test/resources/testBundles/")));
 
         ResourceBundle rb = (ResourceBundle) jscl.loadClass("test.GetBundle").getDeclaredMethod("main").invoke(null);
-        Assert.assertNotNull(rb);
-        Assert.assertEquals("b", rb.getString("a"));
+        Assertions.assertNotNull(rb);
+        Assertions.assertEquals("b", rb.getString("a"));
     }
 
     private static ClassLoader
@@ -165,7 +165,7 @@ class JavaSourceClassLoaderTest {
         // Verify that a class on the CLASSPATH cannot be loaded through that class loader.
         try {
             result.loadClass(JavaSourceClassLoaderTest.class.getName());
-            Assert.fail("extensionsClassLoader should be separate from the current classloader");
+            Assertions.fail("extensionsClassLoader should be separate from the current classloader");
         } catch (ClassNotFoundException cnfe) {
             // as we had intended
         }

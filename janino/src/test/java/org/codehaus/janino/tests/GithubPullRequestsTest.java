@@ -49,14 +49,14 @@ import org.codehaus.janino.Scanner;
 import org.codehaus.janino.SimpleCompiler;
 import org.codehaus.janino.UnitCompiler;
 import org.codehaus.janino.util.ClassFile;
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 public // SUPPRESS CHECKSTYLE Javadoc:9999
 class GithubPullRequestsTest {
 
-    @Before public void
+    @BeforeEach public void
     setUp() throws Exception {
 
         // Optionally print class file disassemblies to the console.
@@ -265,7 +265,7 @@ class GithubPullRequestsTest {
     assertDisassemblyContainsAllOf(String cu, String... infixes) throws Exception {
         String s = GithubPullRequestsTest.compileAndDisassemble(cu);
         for (String infix : infixes) {
-            Assert.assertTrue("Disassembly does not contain \"" + infix + "\": " + s, s.contains(infix));
+            Assertions.assertTrue(s.contains(infix), "Disassembly does not contain \"" + infix + "\": " + s);
         }
     }
 
@@ -273,7 +273,7 @@ class GithubPullRequestsTest {
     assertDisassemblyDoesNotContain(String cu, String... infixes) throws Exception {
         String s = GithubPullRequestsTest.compileAndDisassemble(cu);
         for (String infix : infixes) {
-            Assert.assertFalse("Disassembly contains \"" + infix + "\": " + s, s.contains(infix));
+            Assertions.assertFalse(s.contains(infix), "Disassembly contains \"" + infix + "\": " + s);
         }
     }
 
@@ -294,7 +294,7 @@ class GithubPullRequestsTest {
             classFiles
         );
 
-        Assert.assertEquals(1, classFiles.size());
+        Assertions.assertEquals(1, classFiles.size());
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         classFiles.iterator().next().store(baos);
 
@@ -357,7 +357,7 @@ class GithubPullRequestsTest {
         sc.cook(cu);
         Class<?> c = sc.getClassLoader().loadClass("MyClass");
         Object   o = c.getConstructor(boolean.class).newInstance(true);
-        Assert.assertEquals(null, c.getDeclaredMethod("apply", Object.class).invoke(o, new Object()));
+        Assertions.assertEquals(null, c.getDeclaredMethod("apply", Object.class).invoke(o, new Object()));
     }
 
     /**
@@ -378,6 +378,6 @@ class GithubPullRequestsTest {
 
     private static void
     failNotEquals(String message, Object expected, Object actual) {
-        Assert.fail(message + " " + "expected:<" + expected + "> but was:<" + actual + ">");
+        Assertions.fail(message + " " + "expected:<" + expected + "> but was:<" + actual + ">");
     }
 }

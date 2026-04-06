@@ -33,7 +33,7 @@ import org.codehaus.commons.compiler.CompileException;
 import org.codehaus.commons.compiler.ICompilerFactory;
 import org.codehaus.commons.compiler.ISimpleCompiler;
 import org.codehaus.commons.compiler.LocatedException;
-import org.junit.Assert;
+import org.junit.jupiter.api.Assertions;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
@@ -63,7 +63,7 @@ class SerializationTest {
         ISimpleCompiler compiler = this.compilerFactory.newSimpleCompiler();
         try {
             compiler.cook("this is not valid Java");
-            Assert.fail("Cook should have thrown an exception");
+            Assertions.fail("Cook should have thrown an exception");
         } catch (LocatedException e) {
             ObjectOutputStream oos = new ObjectOutputStream(new ByteArrayOutputStream());
             oos.writeObject(e);

@@ -30,8 +30,8 @@ import java.util.EnumSet;
 import org.codehaus.commons.compiler.CompileException;
 import org.codehaus.janino.JaninoOption;
 import org.codehaus.janino.ScriptEvaluator;
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 // SUPPRESS CHECKSTYLE JavadocMethod:9999
 
@@ -68,9 +68,9 @@ class ScriptEvaluatorTest {
                 + "\n"
                 + "new MyClass().pri = 7;\n"
             );
-            Assert.fail("CompileException expected");
+            Assertions.fail("CompileException expected");
         } catch (CompileException ce) {
-            Assert.assertTrue(ce.getMessage().contains("Private member cannot be accessed"));
+            Assertions.assertTrue(ce.getMessage().contains("Private member cannot be accessed"));
         }
     }
 }

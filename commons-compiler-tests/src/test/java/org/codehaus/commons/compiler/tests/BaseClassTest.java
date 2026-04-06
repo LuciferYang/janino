@@ -29,7 +29,7 @@ import java.util.Collection;
 
 import org.codehaus.commons.compiler.ICompilerFactory;
 import org.codehaus.commons.compiler.IExpressionEvaluator;
-import org.junit.Assert;
+import org.junit.jupiter.api.Assertions;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
@@ -68,6 +68,6 @@ class BaseClassTest extends CommonsCompilerTestSuite {
 
         Object result = ee.getMethod().invoke(instance);
 
-        Assert.assertEquals(15, result);
+        Assertions.assertEquals(15, result);
     }
 }

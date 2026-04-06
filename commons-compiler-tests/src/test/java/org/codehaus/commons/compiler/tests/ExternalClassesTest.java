@@ -33,7 +33,7 @@ import org.codehaus.commons.compiler.CompileException;
 import org.codehaus.commons.compiler.ICompilerFactory;
 import org.codehaus.commons.compiler.IExpressionEvaluator;
 import org.codehaus.commons.compiler.lang.ClassLoaders;
-import org.junit.Assert;
+import org.junit.jupiter.api.Assertions;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
@@ -68,7 +68,7 @@ class ExternalClassesTest {
             IExpressionEvaluator ee = this.compilerFactory.newExpressionEvaluator();
             ee.setParentClassLoader(ClassLoaders.BOOTCLASSPATH_CLASS_LOADER);
             ee.cook("for_sandbox_tests.ExternalClass.m1()");
-            Assert.fail("Should have thrown a CompileException");
+            Assertions.fail("Should have thrown a CompileException");
         } catch (CompileException ex) {
             ;
         }
@@ -83,7 +83,7 @@ class ExternalClassesTest {
 
         Integer result = (Integer) ee.evaluate(new Object[0]);
         assert result != null;
-        Assert.assertEquals(7, result.intValue());
+        Assertions.assertEquals(7, result.intValue());
     }
 
     @Test public void
@@ -96,7 +96,7 @@ class ExternalClassesTest {
 
         Integer result = (Integer) ee.evaluate(new Object[0]);
         assert result != null;
-        Assert.assertEquals(7, result.intValue());
+        Assertions.assertEquals(7, result.intValue());
     }
 }
 

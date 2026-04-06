@@ -29,8 +29,8 @@ import java.io.StringWriter;
 import java.io.Writer;
 
 import org.codehaus.janino.util.AutoIndentWriter;
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 public
 class AutoIndentWriterTest {
@@ -56,7 +56,7 @@ class AutoIndentWriterTest {
         );
         aiw.close();
 
-        Assert.assertEquals(
+        Assertions.assertEquals(
             (
                 ""
                 + "aaa\n"
@@ -101,7 +101,7 @@ class AutoIndentWriterTest {
         );
         aiw.close();
 
-        Assert.assertEquals(
+        Assertions.assertEquals(
             (
                 ""
                 + "a b c\n"

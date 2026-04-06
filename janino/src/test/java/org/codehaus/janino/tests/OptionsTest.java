@@ -37,9 +37,9 @@ import org.codehaus.janino.JaninoOption;
 import org.codehaus.janino.ScriptEvaluator;
 import org.codehaus.janino.SimpleCompiler;
 import org.codehaus.janino.UnitCompiler;
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 // SUPPRESS CHECKSTYLE JavadocMethod:9999
 
@@ -49,7 +49,7 @@ import org.junit.Test;
 public
 class OptionsTest {
 
-    @Before
+    @BeforeEach
     public void
     setUp() throws Exception {
 
@@ -108,11 +108,11 @@ class OptionsTest {
         if (options.length >= 1) se.options(EnumSet.copyOf(Arrays.asList(options)));
         try {
             se.cook(script);
-            Assert.fail("CompileException expected");
+            Assertions.fail("CompileException expected");
         } catch (CompileException ce) {
-            Assert.assertTrue(
-                "Compilation error message\"" + ce.getMessage() + "\" does not contain \"" + expectedInfix + "\"",
-                ce.getMessage().contains(expectedInfix)
+            Assertions.assertTrue(
+                ce.getMessage().contains(expectedInfix),
+                "Compilation error message\"" + ce.getMessage() + "\" does not contain \"" + expectedInfix + "\""
             );
         }
     }

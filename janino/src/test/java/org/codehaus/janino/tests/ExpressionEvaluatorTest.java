@@ -33,8 +33,8 @@ import java.util.Set;
 import org.codehaus.janino.ExpressionEvaluator;
 import org.codehaus.janino.Scanner;
 import org.codehaus.janino.ScriptEvaluator;
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 // SUPPRESS CHECKSTYLE JavadocMethod:9999
 
@@ -53,7 +53,7 @@ class ExpressionEvaluatorTest {
                 + "a + b.c + d.e() + f() + g.h.I.j() + k.l.M"
             ))))
         );
-        Assert.assertEquals(new HashSet<>(Arrays.asList("a", "b", "d")), parameterNames);
+        Assertions.assertEquals(new HashSet<>(Arrays.asList("a", "b", "d")), parameterNames);
 
         parameterNames = new HashSet<>(
             Arrays.asList(ScriptEvaluator.guessParameterNames(new Scanner(null, new StringReader(
@@ -63,6 +63,6 @@ class ExpressionEvaluatorTest {
                 + "return a + b.c + d.e() + f() + g.h.I.j() + k.l.M;"
             ))))
         );
-        Assert.assertEquals(new HashSet<>(Arrays.asList("b", "d")), parameterNames);
+        Assertions.assertEquals(new HashSet<>(Arrays.asList("b", "d")), parameterNames);
     }
 }

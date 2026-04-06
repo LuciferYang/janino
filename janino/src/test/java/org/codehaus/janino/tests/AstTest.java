@@ -72,8 +72,8 @@ import org.codehaus.janino.Scanner;
 import org.codehaus.janino.SimpleCompiler;
 import org.codehaus.janino.Unparser;
 import org.codehaus.janino.util.DeepCopier;
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 // SUPPRESS CHECKSTYLE JavadocMethod:9999
 
@@ -211,9 +211,9 @@ class AstTest {
 
         try {
             AstTest.compileAndEval(cu);
-            Assert.fail("Block must limit the scope of variables in it");
+            Assertions.fail("Block must limit the scope of variables in it");
         } catch (CompileException ex) {
-            Assert.assertTrue(ex.getMessage().endsWith("Expression \"x\" is not an rvalue"));
+            Assertions.assertTrue(ex.getMessage().endsWith("Expression \"x\" is not an rvalue"));
         }
     }
 
@@ -242,7 +242,7 @@ class AstTest {
         AstTest.createMethod(clazz, body, AstTest.createByteArrayType());
 
         Object res = AstTest.compileAndEval(cu);
-        Assert.assertEquals(exp.byteValue(), ((byte[]) res)[0]);
+        Assertions.assertEquals(exp.byteValue(), ((byte[]) res)[0]);
     }
 
     @Test public void
@@ -268,8 +268,8 @@ class AstTest {
         AstTest.createMethod(clazz, body, AstTest.createDoubleType());
 
         Object res = AstTest.compileAndEval(cu);
-        Assert.assertTrue(res instanceof Double);
-        Assert.assertEquals(Double.valueOf(6.0), res);
+        Assertions.assertTrue(res instanceof Double);
+        Assertions.assertEquals(Double.valueOf(6.0), res);
     }
 
     @Test public void
@@ -289,7 +289,7 @@ class AstTest {
         AstTest.createMethod(clazz, body, AstTest.createDoubleType());
 
         Object res = AstTest.compileAndEval(cu);
-        Assert.assertEquals(Double.valueOf(3.0), res);
+        Assertions.assertEquals(Double.valueOf(3.0), res);
     }
 
     @Test public void
@@ -331,7 +331,7 @@ class AstTest {
 
         Object handMade = handMadeClass.newInstance();
         Object res      = calc.invoke(handMade, new Object[0]);
-        Assert.assertEquals(handMadeClass, res);
+        Assertions.assertEquals(handMadeClass, res);
     }
 
     @Test public void
@@ -353,7 +353,7 @@ class AstTest {
         Unparser     u  = new Unparser(sw);
         u.unparseBlockStatement(es);
         u.close();
-        Assert.assertEquals("x = 1 * ((( 2 + 3 )));", sw.toString());
+        Assertions.assertEquals("x = 1 * ((( 2 + 3 )));", sw.toString());
     }
 
     /**
@@ -498,7 +498,7 @@ class AstTest {
         AstTest.createMethod(clazz, body, AstTest.createDoubleType());
 
         Object res = AstTest.compileAndEval(cu);
-        Assert.assertEquals(other_package2.ScopingRules.publicStaticDouble, res);
+        Assertions.assertEquals(other_package2.ScopingRules.publicStaticDouble, res);
     }
 
     @Test public void
@@ -513,7 +513,7 @@ class AstTest {
             AbstractCompilationUnit acu2 = new DeepCopier().copyAbstractCompilationUnit(acu1);
 
             // Assert that the copy is identical with the original.
-            Assert.assertEquals(f.getPath(), AstTest.unparse(acu1), AstTest.unparse(acu2));
+            Assertions.assertEquals(AstTest.unparse(acu1), AstTest.unparse(acu2), f.getPath());
         }
     }
 
@@ -635,7 +635,7 @@ class AstTest {
             actual = sw.toString();
         }
 
-        Assert.assertEquals(
+        Assertions.assertEquals(
             UnparserTest.normalizeWhitespace(text2),
             UnparserTest.normalizeWhitespace(actual)
         );
@@ -650,7 +650,7 @@ class AstTest {
 
     public static void
     assertUnparsesTo(String expected, AbstractCompilationUnit acu) {
-        Assert.assertEquals(
+        Assertions.assertEquals(
             UnparserTest.normalizeWhitespace(expected),
             UnparserTest.normalizeWhitespace(AstTest.unparse(acu))
         );
