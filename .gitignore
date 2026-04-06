@@ -2,6 +2,7 @@
 **/bin/
 **/build/
 **/target/
+**/dependency-reduced-pom.xml
 
 # Maven Wrapper (keep .mvn/wrapper/maven-wrapper.properties, ignore binary)
 .mvn/wrapper/maven-wrapper.jar
