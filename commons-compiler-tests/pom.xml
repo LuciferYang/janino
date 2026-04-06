@@ -55,9 +55,38 @@
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-surefire-plugin</artifactId>
+        <configuration>
+          <argLine>@{argLine} -Xss2m -Duser.language=en -Duser.country=US</argLine>
+        </configuration>
       </plugin>
     </plugins>
   </build>
+
+  <profiles>
+    <!-- JDK 18+: SecurityManager is broken (throws UnsupportedOperationException).
+         JDK 24+: SecurityManager class removed entirely.
+         SandboxTest relies on SecurityManager, so skip it on JDK 18+. -->
+    <profile>
+      <id>jdk18plus-skip-sandbox</id>
+      <activation>
+        <jdk>[18,)</jdk>
+      </activation>
+      <build>
+        <plugins>
+          <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-surefire-plugin</artifactId>
+            <configuration>
+              <excludes>
+                <exclude>**/SandboxTest.java</exclude>
+              </excludes>
+            </configuration>
+          </plugin>
+        </plugins>
+      </build>
+    </profile>
+  </profiles>
+
   <packaging>jar</packaging>
   <description>Tests that use only the &quot;commons-compiler&quot; API and are thus applicable to ALL implementations.
 
