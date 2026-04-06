@@ -41,6 +41,7 @@ public class ScriptCompileBenchmark {
     @Benchmark
     public IScriptEvaluator compileSimpleScript() throws Exception {
         ScriptEvaluator se = new ScriptEvaluator();
+        se.setReturnType(int.class);
         se.cook("return 42;");
         return se;
     }
