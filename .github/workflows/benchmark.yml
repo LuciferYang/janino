@@ -45,18 +45,40 @@ jobs:
           path: jmh-result.json
           retention-days: 90
 
+      # github-action-benchmark treats all values as "smaller is better", but JMH
+      # throughput metrics (ops/ms, ops/s) are "bigger is better". Convert throughput
+      # to latency (1/score) so the action only alerts on real regressions (slower),
+      # not on improvements (faster).
+      - name: Normalize JMH results for regression detection
+        run: |
+          jq '[.[] |
+            if (.primaryMetric.scoreUnit | test("^ops/")) then
+              .primaryMetric.score = (1.0 / .primaryMetric.score) |
+              .primaryMetric.scoreUnit = (
+                if .primaryMetric.scoreUnit == "ops/ms" then "ms/op"
+                elif .primaryMetric.scoreUnit == "ops/s" then "s/op"
+                elif .primaryMetric.scoreUnit == "ops/us" then "us/op"
+                elif .primaryMetric.scoreUnit == "ops/ns" then "ns/op"
+                else .primaryMetric.scoreUnit
+                end
+              ) |
+              .primaryMetric.scoreError = 0
+            else .
+            end
+          ]' jmh-result.json > jmh-result-normalized.json
+
       - name: Store benchmark result
         uses: benchmark-action/github-action-benchmark@v1
         with:
           tool: 'jmh'
-          output-file-path: jmh-result.json
+          output-file-path: jmh-result-normalized.json
           # GitHub Pages branch and directory
           gh-pages-branch: gh-pages
           benchmark-data-dir-path: dev/bench
           # Automatically push results to gh-pages
           auto-push: true
           github-token: ${{ secrets.GITHUB_TOKEN }}
-          # Alert if benchmark regresses by more than 150%
+          # Alert only on regressions exceeding 10%
           alert-threshold: '110%'
           comment-on-alert: true
           fail-on-alert: false
