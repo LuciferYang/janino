@@ -13,6 +13,7 @@
 **/.settings/
 **/.metadata/
 **/.factorypath
+**/.checkstyle
 
 # IDE files - IntelliJ IDEA
 **/.idea/

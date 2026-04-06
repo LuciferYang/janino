@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE suppressions PUBLIC "-//Checkstyle//DTD SuppressionFilter Configuration 1.2//EN"
+  "https://checkstyle.org/dtds/suppressions_1_2.dtd">
+
+<suppressions>
+  <!-- Visitor/copier classes with long generated-style method signatures -->
+  <suppress files="DeepCopier\.java$" checks="LineLengthCheck"/>
+  <suppress files="AbstractTraverser\.java$" checks="LineLengthCheck"/>
+</suppressions>

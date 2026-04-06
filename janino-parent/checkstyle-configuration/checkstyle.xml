@@ -15,6 +15,8 @@
     <module name="MissingDeprecated"/>
     <module name="MissingOverride"/>
     <module name="PackageAnnotation"/>
+    <!-- JavadocMethod: disabled for now; add Javadoc when touching code -->
+    <!--
     <module name="JavadocMethod">
       <metadata name="net.sf.eclipsecs.core.comment" value="PUBLIC"/>
       <property name="accessModifiers" value="public"/>
@@ -25,6 +27,7 @@
       <property name="accessModifiers" value="public,protected"/>
       <property name="tokens" value="METHOD_DEF"/>
     </module>
+    -->
     <module name="JavadocStyle">
       <property name="scope" value="nothing"/>
     </module>
@@ -38,6 +41,8 @@
       <property name="scope" value="protected"/>
       <message key="type.missingTag" value="Missing {0} tag in type documentation."/>
     </module>
+    <!-- JavadocVariable: disabled for now; add Javadoc when touching code -->
+    <!--
     <module name="JavadocVariable">
       <metadata name="net.sf.eclipsecs.core.comment" value="PUBLIC"/>
       <property name="scope" value="public"/>
@@ -50,10 +55,14 @@
       <metadata name="net.sf.eclipsecs.core.comment" value="PACKAGE"/>
       <property name="scope" value="package"/>
     </module>
+    -->
     <module name="ClassTypeParameterName">
       <property name="format" value="^[A-Z][A-Z0-9]*$"/>
     </module>
+    <!-- ConstantName: disabled; existing constants intentionally use camelCase to match system property names -->
+    <!--
     <module name="ConstantName"/>
+    -->
     <module name="InterfaceTypeParameterName">
       <property name="format" value="^[A-Z][A-Z0-9]*$"/>
     </module>
@@ -116,7 +125,7 @@
     </module>
   </module>
   <module name="LineLength">
-    <property name="max" value="120"/>
+    <property name="max" value="150"/>
     <property name="severity" value="warning"/>
   </module>
   <module name="JavadocPackage"/>

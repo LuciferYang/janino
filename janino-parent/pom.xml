@@ -282,7 +282,7 @@
       </build>
     </profile>
 
-    <!-- Code quality profile: JaCoCo + SpotBugs -->
+    <!-- Code quality profile: JaCoCo + SpotBugs + Checkstyle -->
     <profile>
       <id>quality</id>
       <build>
@@ -316,6 +316,25 @@
             <executions>
               <execution>
                 <id>spotbugs-check</id>
+                <phase>verify</phase>
+                <goals><goal>check</goal></goals>
+              </execution>
+            </executions>
+          </plugin>
+          <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-checkstyle-plugin</artifactId>
+            <version>${maven-checkstyle-plugin.version}</version>
+            <configuration>
+              <configLocation>${maven.multiModuleProjectDirectory}/checkstyle-configuration/checkstyle.xml</configLocation>
+              <suppressionsLocation>${maven.multiModuleProjectDirectory}/checkstyle-configuration/checkstyle-suppressions.xml</suppressionsLocation>
+              <consoleOutput>true</consoleOutput>
+              <failOnViolation>false</failOnViolation>
+              <violationSeverity>error</violationSeverity>
+            </configuration>
+            <executions>
+              <execution>
+                <id>checkstyle-check</id>
                 <phase>verify</phase>
                 <goals><goal>check</goal></goals>
               </execution>
