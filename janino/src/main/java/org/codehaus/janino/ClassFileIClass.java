@@ -384,16 +384,26 @@ class ClassFileIClass extends IClass {
 
                     final ClassFile cf = ClassFileIClass.this.classFile;
 
-                    @Override public Object visitBooleanElementValue(BooleanElementValue subject) { return this.getConstantValue(subject.constantValueIndex); }
-                    @Override public Object visitByteElementValue(ByteElementValue subject)       { return this.getConstantValue(subject.constantValueIndex); }
-                    @Override public Object visitCharElementValue(CharElementValue subject)       { return this.getConstantValue(subject.constantValueIndex); }
-                    @Override public Object visitClassElementValue(ClassElementValue subject)     { return this.getConstantValue(subject.constantValueIndex); }
-                    @Override public Object visitDoubleElementValue(DoubleElementValue subject)   { return this.getConstantValue(subject.constantValueIndex); }
-                    @Override public Object visitFloatElementValue(FloatElementValue subject)     { return this.getConstantValue(subject.constantValueIndex); }
-                    @Override public Object visitIntElementValue(IntElementValue subject)         { return this.getConstantValue(subject.constantValueIndex); }
-                    @Override public Object visitLongElementValue(LongElementValue subject)       { return this.getConstantValue(subject.constantValueIndex); }
-                    @Override public Object visitShortElementValue(ShortElementValue subject)     { return this.getConstantValue(subject.constantValueIndex); }
-                    @Override public Object visitStringElementValue(StringElementValue subject)   { return this.getConstantValue(subject.constantValueIndex); }
+                    @Override public Object
+                    visitBooleanElementValue(BooleanElementValue subject) { return this.getConstantValue(subject.constantValueIndex); }
+                    @Override public Object
+                    visitByteElementValue(ByteElementValue subject) { return this.getConstantValue(subject.constantValueIndex); }
+                    @Override public Object
+                    visitCharElementValue(CharElementValue subject) { return this.getConstantValue(subject.constantValueIndex); }
+                    @Override public Object
+                    visitClassElementValue(ClassElementValue subject) { return this.getConstantValue(subject.constantValueIndex); }
+                    @Override public Object
+                    visitDoubleElementValue(DoubleElementValue subject) { return this.getConstantValue(subject.constantValueIndex); }
+                    @Override public Object
+                    visitFloatElementValue(FloatElementValue subject) { return this.getConstantValue(subject.constantValueIndex); }
+                    @Override public Object
+                    visitIntElementValue(IntElementValue subject) { return this.getConstantValue(subject.constantValueIndex); }
+                    @Override public Object
+                    visitLongElementValue(LongElementValue subject) { return this.getConstantValue(subject.constantValueIndex); }
+                    @Override public Object
+                    visitShortElementValue(ShortElementValue subject) { return this.getConstantValue(subject.constantValueIndex); }
+                    @Override public Object
+                    visitStringElementValue(StringElementValue subject) { return this.getConstantValue(subject.constantValueIndex); }
 
                     @Override public Object
                     visitAnnotation(Annotation subject) {

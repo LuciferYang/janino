@@ -329,8 +329,7 @@
               <configLocation>${maven.multiModuleProjectDirectory}/checkstyle-configuration/checkstyle.xml</configLocation>
               <suppressionsLocation>${maven.multiModuleProjectDirectory}/checkstyle-configuration/checkstyle-suppressions.xml</suppressionsLocation>
               <consoleOutput>true</consoleOutput>
-              <failOnViolation>false</failOnViolation>
-              <violationSeverity>error</violationSeverity>
+              <failOnViolation>true</failOnViolation>
             </configuration>
             <executions>
               <execution>

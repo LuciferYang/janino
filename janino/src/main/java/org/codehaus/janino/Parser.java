@@ -3792,21 +3792,23 @@ class Parser {
     // Token-level methods.
 
     // Shorthand for the various "TokenStream" methods.
-    public Token            peek()                              throws CompileException, IOException { return this.tokenStream.peek();                             }
-    public Token            read()                              throws CompileException, IOException { return this.tokenStream.read();                             }
-    public boolean          peek(String suspected)              throws CompileException, IOException { return this.tokenStream.peek(suspected);                    }
-    public int              peek(String... suspected)           throws CompileException, IOException { return this.tokenStream.peek(suspected);                    }
-    public boolean          peek(TokenType suspected)           throws CompileException, IOException { return this.tokenStream.peek(suspected);                    }
-    public int              peek(TokenType... suspected)        throws CompileException, IOException { return this.tokenStream.peek(suspected);                    }
-    public Token            peekNextButOne()                    throws CompileException, IOException { return this.tokenStream.peekNextButOne();                   }
-    public boolean          peekNextButOne(String suspected)    throws CompileException, IOException { return this.tokenStream.peekNextButOne(suspected);          }
-    public boolean          peekNextButOne(TokenType suspected) throws CompileException, IOException { return this.tokenStream.peekNextButOne().type == suspected; }
-    public void             read(String expected)               throws CompileException, IOException { this.tokenStream.read(expected);                            }
-    public int              read(String... expected)            throws CompileException, IOException { return this.tokenStream.read(expected);                     }
-    public String           read(TokenType expected)            throws CompileException, IOException { return this.tokenStream.read(expected);                     }
-    public boolean          peekRead(String suspected)          throws CompileException, IOException { return this.tokenStream.peekRead(suspected);                }
-    public int              peekRead(String... suspected)       throws CompileException, IOException { return this.tokenStream.peekRead(suspected);                }
-    @Nullable public String peekRead(TokenType suspected)       throws CompileException, IOException { return this.tokenStream.peekRead(suspected);                }
+    public Token peek()                                     throws CompileException, IOException { return this.tokenStream.peek(); }
+    public Token read()                                     throws CompileException, IOException { return this.tokenStream.read(); }
+    public boolean peek(String suspected)                   throws CompileException, IOException { return this.tokenStream.peek(suspected); }
+    public int peek(String... suspected)                    throws CompileException, IOException { return this.tokenStream.peek(suspected); }
+    public boolean peek(TokenType suspected)                throws CompileException, IOException { return this.tokenStream.peek(suspected); }
+    public int peek(TokenType... suspected)                 throws CompileException, IOException { return this.tokenStream.peek(suspected); }
+    public Token peekNextButOne()                           throws CompileException, IOException { return this.tokenStream.peekNextButOne(); }
+    public boolean peekNextButOne(String suspected)    throws CompileException, IOException { return this.tokenStream.peekNextButOne(suspected); }
+    public boolean peekNextButOne(TokenType suspected) throws CompileException, IOException {
+        return this.tokenStream.peekNextButOne().type == suspected;
+    }
+    public void read(String expected)                       throws CompileException, IOException { this.tokenStream.read(expected); }
+    public int read(String... expected)                     throws CompileException, IOException { return this.tokenStream.read(expected); }
+    public String read(TokenType expected)                  throws CompileException, IOException { return this.tokenStream.read(expected); }
+    public boolean peekRead(String suspected)               throws CompileException, IOException { return this.tokenStream.peekRead(suspected); }
+    public int peekRead(String... suspected)                throws CompileException, IOException { return this.tokenStream.peekRead(suspected); }
+    @Nullable public String peekRead(TokenType suspected)   throws CompileException, IOException { return this.tokenStream.peekRead(suspected); }
 
     private boolean
     peekLiteral() throws CompileException, IOException {

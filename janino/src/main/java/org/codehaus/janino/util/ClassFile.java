@@ -3312,8 +3312,10 @@ class ClassFile implements Annotatable {
     }
     public static final
     class BooleanElementValue extends ConstantElementValue {
-        public                                          BooleanElementValue(short constantValueIndex) { super((byte) 'Z', constantValueIndex);         }
-        @Override protected <R, EX extends Throwable> R accept(Visitor<R, EX> visitor) throws EX      { return visitor.visitBooleanElementValue(this); }
+        public BooleanElementValue(short constantValueIndex) { super((byte) 'Z', constantValueIndex); }
+
+        @Override protected <R, EX extends Throwable> R
+        accept(Visitor<R, EX> visitor) throws EX { return visitor.visitBooleanElementValue(this); }
     }
     public static final
     class StringElementValue extends ConstantElementValue {
