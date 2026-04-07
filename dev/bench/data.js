@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1775498835853,
+  "lastUpdate": 1775523020985,
   "repoUrl": "https://github.com/LuciferYang/janino",
   "entries": {
     "Benchmark": [
@@ -340,6 +340,120 @@ window.BENCHMARK_DATA = {
           {
             "name": "org.codehaus.janino.benchmarks.SelfCompileBenchmark.compileScannerClass",
             "value": 17.457173,
+            "unit": "ms/op",
+            "extra": "iterations: 20\nforks: 2\nthreads: 1"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "yangjie01@baidu.com",
+            "name": "yangjie01",
+            "username": "LuciferYang"
+          },
+          "committer": {
+            "email": "yangjie01@baidu.com",
+            "name": "yangjie01",
+            "username": "LuciferYang"
+          },
+          "distinct": true,
+          "id": "cca6efa616690eb2ffc0da1adc22dbdf2ec3e405",
+          "message": "docs: add SpotBugs findings triage document\n\nTriage all 378 SpotBugs findings (17 Priority-1, 361 Priority-2).\nPriority-1 findings: 14 DM_DEFAULT_ENCODING (tracked for fix),\n2 INT_BAD_COMPARISON (false positive), 1 RCN_REDUNDANT_NULLCHECK\n(false positive). Priority-2 findings are mostly expected patterns\nfor a compiler project (interned string comparison, public AST fields,\nexposed internal arrays for performance).",
+          "timestamp": "2026-04-07T08:36:11+08:00",
+          "tree_id": "07046457057f7d2fe3a6c43456c8b8c18af48c45",
+          "url": "https://github.com/LuciferYang/janino/commit/cca6efa616690eb2ffc0da1adc22dbdf2ec3e405"
+        },
+        "date": 1775523020659,
+        "tool": "jmh",
+        "benches": [
+          {
+            "name": "org.codehaus.janino.benchmarks.CompilationUnitBenchmark.compileComplexClass",
+            "value": 0.39869649293174964,
+            "unit": "ms/op",
+            "extra": "iterations: 20\nforks: 2\nthreads: 1"
+          },
+          {
+            "name": "org.codehaus.janino.benchmarks.CompilationUnitBenchmark.compileSimpleClass",
+            "value": 0.06056455304492251,
+            "unit": "ms/op",
+            "extra": "iterations: 20\nforks: 2\nthreads: 1"
+          },
+          {
+            "name": "org.codehaus.janino.benchmarks.ExpressionCompileBenchmark.compileComplexExpression",
+            "value": 0.16079941126332406,
+            "unit": "ms/op",
+            "extra": "iterations: 20\nforks: 2\nthreads: 1"
+          },
+          {
+            "name": "org.codehaus.janino.benchmarks.ExpressionCompileBenchmark.compileSimpleArithmetic",
+            "value": 0.12345412057931061,
+            "unit": "ms/op",
+            "extra": "iterations: 20\nforks: 2\nthreads: 1"
+          },
+          {
+            "name": "org.codehaus.janino.benchmarks.ExpressionCompileBenchmark.createFastEvaluator",
+            "value": 0.16110763455174867,
+            "unit": "ms/op",
+            "extra": "iterations: 20\nforks: 2\nthreads: 1"
+          },
+          {
+            "name": "org.codehaus.janino.benchmarks.ExpressionCompileBenchmark.evaluatePreCompiled",
+            "value": 0.0000070849849754577,
+            "unit": "ms/op",
+            "extra": "iterations: 20\nforks: 2\nthreads: 1"
+          },
+          {
+            "name": "org.codehaus.janino.benchmarks.JaninoVsJdkBenchmark.compileExpression ( {\"compilerFactoryClassName\":\"org.codehaus.janino.CompilerFactory\"} )",
+            "value": 0.13620968658491758,
+            "unit": "ms/op",
+            "extra": "iterations: 20\nforks: 2\nthreads: 1"
+          },
+          {
+            "name": "org.codehaus.janino.benchmarks.JaninoVsJdkBenchmark.compileExpression ( {\"compilerFactoryClassName\":\"org.codehaus.commons.compiler.jdk.CompilerFactory\"} )",
+            "value": 5.434064377434073,
+            "unit": "ms/op",
+            "extra": "iterations: 20\nforks: 2\nthreads: 1"
+          },
+          {
+            "name": "org.codehaus.janino.benchmarks.JaninoVsJdkBenchmark.evaluateExpression ( {\"compilerFactoryClassName\":\"org.codehaus.janino.CompilerFactory\"} )",
+            "value": 0.000007739019583269293,
+            "unit": "ms/op",
+            "extra": "iterations: 20\nforks: 2\nthreads: 1"
+          },
+          {
+            "name": "org.codehaus.janino.benchmarks.JaninoVsJdkBenchmark.evaluateExpression ( {\"compilerFactoryClassName\":\"org.codehaus.commons.compiler.jdk.CompilerFactory\"} )",
+            "value": 0.000010413900016190615,
+            "unit": "ms/op",
+            "extra": "iterations: 20\nforks: 2\nthreads: 1"
+          },
+          {
+            "name": "org.codehaus.janino.benchmarks.ScriptCompileBenchmark.compileLoopScript",
+            "value": 0.14644737072248798,
+            "unit": "ms/op",
+            "extra": "iterations: 20\nforks: 2\nthreads: 1"
+          },
+          {
+            "name": "org.codehaus.janino.benchmarks.ScriptCompileBenchmark.compileSimpleScript",
+            "value": 0.11195633290062665,
+            "unit": "ms/op",
+            "extra": "iterations: 20\nforks: 2\nthreads: 1"
+          },
+          {
+            "name": "org.codehaus.janino.benchmarks.ScriptCompileBenchmark.executePreCompiled",
+            "value": 0.000024772099944945856,
+            "unit": "ms/op",
+            "extra": "iterations: 20\nforks: 2\nthreads: 1"
+          },
+          {
+            "name": "org.codehaus.janino.benchmarks.SelfCompileBenchmark.compileParserClass",
+            "value": 57.84573372499999,
+            "unit": "ms/op",
+            "extra": "iterations: 20\nforks: 2\nthreads: 1"
+          },
+          {
+            "name": "org.codehaus.janino.benchmarks.SelfCompileBenchmark.compileScannerClass",
+            "value": 20.973396074999993,
             "unit": "ms/op",
             "extra": "iterations: 20\nforks: 2\nthreads: 1"
           }
