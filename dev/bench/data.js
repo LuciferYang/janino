@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1775523020985,
+  "lastUpdate": 1775591930131,
   "repoUrl": "https://github.com/LuciferYang/janino",
   "entries": {
     "Benchmark": [
@@ -454,6 +454,120 @@ window.BENCHMARK_DATA = {
           {
             "name": "org.codehaus.janino.benchmarks.SelfCompileBenchmark.compileScannerClass",
             "value": 20.973396074999993,
+            "unit": "ms/op",
+            "extra": "iterations: 20\nforks: 2\nthreads: 1"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "yangjie01@baidu.com",
+            "name": "yangjie01",
+            "username": "LuciferYang"
+          },
+          "committer": {
+            "email": "yangjie01@baidu.com",
+            "name": "yangjie01",
+            "username": "LuciferYang"
+          },
+          "distinct": true,
+          "id": "f8a8d0d56bac2776beff93ea501823e3bb36620a",
+          "message": "fix: resolve all Checkstyle LineLength violations and enable failOnViolation\n\nReformat 69 lines exceeding 150 chars across 7 files by reducing\nalignment padding and splitting long one-liners into multi-line form.\nEnable failOnViolation=true so future violations will break the build.",
+          "timestamp": "2026-04-08T03:44:14+08:00",
+          "tree_id": "056c1657a7d79a1b1b62433c934aa86c66576340",
+          "url": "https://github.com/LuciferYang/janino/commit/f8a8d0d56bac2776beff93ea501823e3bb36620a"
+        },
+        "date": 1775591929541,
+        "tool": "jmh",
+        "benches": [
+          {
+            "name": "org.codehaus.janino.benchmarks.CompilationUnitBenchmark.compileComplexClass",
+            "value": 0.3968417252328064,
+            "unit": "ms/op",
+            "extra": "iterations: 20\nforks: 2\nthreads: 1"
+          },
+          {
+            "name": "org.codehaus.janino.benchmarks.CompilationUnitBenchmark.compileSimpleClass",
+            "value": 0.05991167267370649,
+            "unit": "ms/op",
+            "extra": "iterations: 20\nforks: 2\nthreads: 1"
+          },
+          {
+            "name": "org.codehaus.janino.benchmarks.ExpressionCompileBenchmark.compileComplexExpression",
+            "value": 0.16167336564428644,
+            "unit": "ms/op",
+            "extra": "iterations: 20\nforks: 2\nthreads: 1"
+          },
+          {
+            "name": "org.codehaus.janino.benchmarks.ExpressionCompileBenchmark.compileSimpleArithmetic",
+            "value": 0.11868536393724263,
+            "unit": "ms/op",
+            "extra": "iterations: 20\nforks: 2\nthreads: 1"
+          },
+          {
+            "name": "org.codehaus.janino.benchmarks.ExpressionCompileBenchmark.createFastEvaluator",
+            "value": 0.16328946818548318,
+            "unit": "ms/op",
+            "extra": "iterations: 20\nforks: 2\nthreads: 1"
+          },
+          {
+            "name": "org.codehaus.janino.benchmarks.ExpressionCompileBenchmark.evaluatePreCompiled",
+            "value": 0.000007093466430614034,
+            "unit": "ms/op",
+            "extra": "iterations: 20\nforks: 2\nthreads: 1"
+          },
+          {
+            "name": "org.codehaus.janino.benchmarks.JaninoVsJdkBenchmark.compileExpression ( {\"compilerFactoryClassName\":\"org.codehaus.janino.CompilerFactory\"} )",
+            "value": 0.13141906861443833,
+            "unit": "ms/op",
+            "extra": "iterations: 20\nforks: 2\nthreads: 1"
+          },
+          {
+            "name": "org.codehaus.janino.benchmarks.JaninoVsJdkBenchmark.compileExpression ( {\"compilerFactoryClassName\":\"org.codehaus.commons.compiler.jdk.CompilerFactory\"} )",
+            "value": 5.402444864306964,
+            "unit": "ms/op",
+            "extra": "iterations: 20\nforks: 2\nthreads: 1"
+          },
+          {
+            "name": "org.codehaus.janino.benchmarks.JaninoVsJdkBenchmark.evaluateExpression ( {\"compilerFactoryClassName\":\"org.codehaus.janino.CompilerFactory\"} )",
+            "value": 0.000007510939106002,
+            "unit": "ms/op",
+            "extra": "iterations: 20\nforks: 2\nthreads: 1"
+          },
+          {
+            "name": "org.codehaus.janino.benchmarks.JaninoVsJdkBenchmark.evaluateExpression ( {\"compilerFactoryClassName\":\"org.codehaus.commons.compiler.jdk.CompilerFactory\"} )",
+            "value": 0.000010386477752815535,
+            "unit": "ms/op",
+            "extra": "iterations: 20\nforks: 2\nthreads: 1"
+          },
+          {
+            "name": "org.codehaus.janino.benchmarks.ScriptCompileBenchmark.compileLoopScript",
+            "value": 0.14257387901116633,
+            "unit": "ms/op",
+            "extra": "iterations: 20\nforks: 2\nthreads: 1"
+          },
+          {
+            "name": "org.codehaus.janino.benchmarks.ScriptCompileBenchmark.compileSimpleScript",
+            "value": 0.11528895507481624,
+            "unit": "ms/op",
+            "extra": "iterations: 20\nforks: 2\nthreads: 1"
+          },
+          {
+            "name": "org.codehaus.janino.benchmarks.ScriptCompileBenchmark.executePreCompiled",
+            "value": 0.000024787335480464418,
+            "unit": "ms/op",
+            "extra": "iterations: 20\nforks: 2\nthreads: 1"
+          },
+          {
+            "name": "org.codehaus.janino.benchmarks.SelfCompileBenchmark.compileParserClass",
+            "value": 59.322130125000015,
+            "unit": "ms/op",
+            "extra": "iterations: 20\nforks: 2\nthreads: 1"
+          },
+          {
+            "name": "org.codehaus.janino.benchmarks.SelfCompileBenchmark.compileScannerClass",
+            "value": 18.020217024999997,
             "unit": "ms/op",
             "extra": "iterations: 20\nforks: 2\nthreads: 1"
           }
